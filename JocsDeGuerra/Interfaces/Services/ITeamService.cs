@@ -1,11 +1,10 @@
 ﻿using JocsDeGuerra.Models;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JocsDeGuerra.Interfaces.Services
 {
-    public interface IAssetService
+    public interface ITeamService
     {
-        List<Asset> GetAllAssets();
+        List<TeamAsset> GetTeamAssets();
     }
 }

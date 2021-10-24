@@ -1,5 +1,8 @@
 ﻿@page "/informetorn"
 @inject IMapLocationService locationService
+@inject IAssetService assetsService
+@inject ITeamService teamService
+
 <h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber</h3>
 <div class="row">
     <div class="col">
@@ -72,6 +75,11 @@
             <TaulaUbicacions TeamLocations="CurrentTorn.Team.OwnedLocations" />
         </MudCard>
     </div>
+    <div class="col">
+        <MudCard Outlined="true">
+            <LlistaAssets Assets="CurrentTorn.Team.AvailableAssets" />
+        </MudCard>
+    </div>
 </div>
 
 
@@ -92,15 +100,16 @@
                     ProductionPoints = 3,
                     ResearchPoints = 3
                 },
-                OwnedLocations = locationService.GetAllLocations().ToList()
+                OwnedLocations = locationService.GetAllLocations(),
+                AvailableAssets = teamService.GetTeamAssets()
             },
-            MapLocations = locationService.GetAllLocations().ToList(),
-            CurrentTurn = new Turn {
+            MapLocations = locationService.GetAllLocations(),
+            CurrentTurn = new Turn
+            {
                 TurnNumber = 1
             },
             TurnActions = new TurnActionsViewModel(),
-            Assets = new List<Asset>()
-
+            Assets = assetsService.GetAllAssets()
         };
     }
 }

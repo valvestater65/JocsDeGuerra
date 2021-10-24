@@ -5,6 +5,6 @@ namespace JocsDeGuerra.Interfaces.Services
 {
     public interface IMapLocationService
     {
-        IEnumerable<MapLocation> GetAllLocations();
+        List<MapLocation> GetAllLocations();
     }
 }

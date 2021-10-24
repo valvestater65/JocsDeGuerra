@@ -8,7 +8,7 @@ namespace JocsDeGuerra.Services
 {
     public class MapLocationService : IMapLocationService
     {
-        public IEnumerable<MapLocation> GetAllLocations()
+        public List<MapLocation> GetAllLocations()
         {
             return new List<MapLocation>
             {

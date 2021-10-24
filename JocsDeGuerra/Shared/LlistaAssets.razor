@@ -1,0 +1,25 @@
+﻿<MudTable Items="Assets">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Assets Disponibles</MudText>
+        <MudSpacer></MudSpacer>
+        <MudButton>Afegir</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<TeamAsset,object>(x => x.Asset.Name)">Nom</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TeamAsset,object>(x => x.Asset.Abbrv)">Abbr.</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TeamAsset,object>(x => x.Available)">Disponibles</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<TeamAsset,object>(x => x.Reserved)">Reservats</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nom">@context.Asset.Name</MudTd>
+        <MudTd DataLabel="Abbr.">@context.Asset.Abbrv</MudTd>
+        <MudTd DataLabel="Disponibles">@context.Available</MudTd>
+        <MudTd DataLabel="Reservats">@context.Reserved</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    [Parameter]
+    public List<TeamAsset> Assets { get; set; }
+}

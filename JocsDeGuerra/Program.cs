@@ -21,6 +21,7 @@ namespace JocsDeGuerra
             builder.Services.AddMudServices();
             builder.Services.AddScoped<IMapLocationService, MapLocationService>();
             builder.Services.AddScoped<IAssetService, AssetService>();
+            builder.Services.AddScoped<ITeamService, TeamService>();
 
             builder.Services.AddOidcAuthentication(options =>
             {

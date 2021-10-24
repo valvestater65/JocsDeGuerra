@@ -1,4 +1,6 @@
-﻿<MudTable Items="@TeamLocations" Dense="true">
+﻿@inject IMapLocationService locationService
+
+<MudTable Items="@TeamLocations" Dense="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Localitzacions</MudText>
         <MudSpacer></MudSpacer>
@@ -22,10 +24,11 @@
 @code {
     [Parameter]
     public List<MapLocation> TeamLocations { get; set; }
+    private List<MapLocation> AvailableLocations { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
-
+        AvailableLocations = locationService.GetAllLocations();
     }
 }

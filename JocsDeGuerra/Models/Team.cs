@@ -12,6 +12,6 @@ namespace JocsDeGuerra.Models
         public int BaseResearchPoints { get; set; }
         public AccumulatedPoints AvailablePoints { get; set; }
         public List<MapLocation> OwnedLocations { get; set; }
-        public List<Asset> AvailableAssets { get; set; }
+        public List<TeamAsset> AvailableAssets { get; set; }
     }
 }
