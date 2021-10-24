@@ -1,0 +1,29 @@
+﻿@page "/locationlist"
+@inject IMapLocationService locationService
+
+<h3>Localitzacions</h3>
+<MudTable Items="@MapLocations">
+    <HeaderContent>
+        <MudTh>Nom</MudTh>
+        <MudTh>Punts Producció</MudTh>
+        <MudTh>Punts Recerca</MudTh>
+        <MudTh>Punts Exploració</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nom">@context.Name</MudTd>
+        <MudTd DataLabel="Punts Producció">@context.ProductionPoints</MudTd>
+        <MudTd DataLabel="Punts Recerca">@context.ResearchPoints</MudTd>
+        <MudTd DataLabel="Punts Exploració">@context.ExplorationPoints</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private List<MapLocation> MapLocations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        MapLocations = locationService.GetAllLocations().ToList();
+    }
+
+}

@@ -1,0 +1,106 @@
+﻿@page "/informetorn"
+@inject IMapLocationService locationService
+<h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber</h3>
+<div class="row">
+    <div class="col">
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <h5 class="card-header">Punts disponibles</h5>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Producció</th>
+                            <th scope="col">Recerca</th>
+                            <th scope="col">Exploració</th>
+                            <th scope="col">Industria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@CurrentTorn.Team.AvailablePoints.ProductionPoints</td>
+                            <td>@CurrentTorn.Team.AvailablePoints.ResearchPoints</td>
+                            <td>@CurrentTorn.Team.AvailablePoints.ExplorationPoints</td>
+                            <td>@CurrentTorn.Team.AvailablePoints.IndustryPoints</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </MudCardContent>
+        </MudCard>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col">
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h5">Informe activitats torn</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Desa</MudButton>
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudGrid>
+                    <MudItem xl="3">
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionText" Label="Producció" Variant="Variant.Text"></MudTextField>
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                    </MudItem>
+                    <MudItem xl="3">
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchText" Label="Recerca" Variant="Variant.Text"></MudTextField>
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                    </MudItem>
+                    <MudItem xl="3">
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationText" Label="Exploració" Variant="Variant.Text"></MudTextField>
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                    </MudItem>
+                    <MudItem xl="3">
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryText" Label="Mineria/Transport" Variant="Variant.Text"></MudTextField>
+                        <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                    </MudItem>
+                </MudGrid>
+            </MudCardContent>
+        </MudCard>
+    </div>
+</div>
+<div class="row my-2">
+    <div class="col">
+        <MudCard Outlined="true">
+            <TaulaUbicacions TeamLocations="CurrentTorn.Team.OwnedLocations" />
+        </MudCard>
+    </div>
+</div>
+
+
+@code {
+    public InformeTornViewModel CurrentTorn { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentTorn = new InformeTornViewModel
+        {
+            Team = new Team
+            {
+                Name = "Test",
+                AvailablePoints = new AccumulatedPoints
+                {
+                    ExplorationPoints = 3,
+                    IndustryPoints = 3,
+                    ProductionPoints = 3,
+                    ResearchPoints = 3
+                },
+                OwnedLocations = locationService.GetAllLocations().ToList()
+            },
+            MapLocations = locationService.GetAllLocations().ToList(),
+            CurrentTurn = new Turn {
+                TurnNumber = 1
+            },
+            TurnActions = new TurnActionsViewModel(),
+            Assets = new List<Asset>()
+
+        };
+    }
+}

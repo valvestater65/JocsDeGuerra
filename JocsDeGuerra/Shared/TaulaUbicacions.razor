@@ -1,0 +1,31 @@
+﻿<MudTable Items="@TeamLocations" Dense="true">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Localitzacions</MudText>
+        <MudSpacer></MudSpacer>
+        <MudButton>Afegir</MudButton>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.Name)">Nom</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ProductionPoints)">Producció</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ResearchPoints)">Investigació</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ExplorationPoints)">Exploració</MudTableSortLabel></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nom">@context.Name</MudTd>
+        <MudTd DataLabel="Producció">@context.ProductionPoints</MudTd>
+        <MudTd DataLabel="Investigació">@context.ResearchPoints</MudTd>
+        <MudTd DataLabel="Exploració">@context.ExplorationPoints</MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code {
+    [Parameter]
+    public List<MapLocation> TeamLocations { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+}
