@@ -1,4 +1,4 @@
-﻿<MudTable Items="Assets">
+﻿<MudTable Items="Assets" CanCancelEdit="true" @bind-SelectedItem="selectedAsset" RowEditPreview="BackupItem" RowEditCancel="CancelItemEdit" RowEditCommit="SaveAssetChanges">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Assets Disponibles</MudText>
         <MudSpacer></MudSpacer>
@@ -16,10 +16,63 @@
         <MudTd DataLabel="Disponibles">@context.Available</MudTd>
         <MudTd DataLabel="Reservats">@context.Reserved</MudTd>
     </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Disponibles">
+            <MudNumericField @bind-Value="@context.Available" />
+        </MudTd>
+        <MudTd DataLabel="Reservats">
+            <MudNumericField @bind-Value="@context.Reserved" />
+        </MudTd>
+    </RowEditingTemplate>
 </MudTable>
 
 @code {
 
     [Parameter]
     public List<TeamAsset> Assets { get; set; }
+    private TeamAsset assetPreEdit;
+    private TeamAsset selectedAsset;
+
+    private void BackupItem(object item)
+    {
+        var assetItem = (TeamAsset)item;
+        assetPreEdit = new TeamAsset()
+        {
+            Available = assetItem.Available,
+            Reserved = assetItem.Reserved,
+            Id = assetItem.Id,
+            Asset = new Asset
+            {
+                Abbrv = assetItem.Asset.Abbrv,
+                BaseProductionCost = assetItem.Asset.BaseProductionCost,
+                BaseResearchCost = assetItem.Asset.BaseResearchCost,
+                Enabled = assetItem.Asset.Enabled,
+                Id = assetItem.Asset.Id,
+                Name = assetItem.Asset.Name
+            }
+        };
+    }
+
+    private void CancelItemEdit(object element)
+    {
+        ((TeamAsset)element).Asset.Name = assetPreEdit.Asset.Name;
+        ((TeamAsset)element).Asset.BaseProductionCost = assetPreEdit.Asset.BaseProductionCost;
+        ((TeamAsset)element).Asset.BaseResearchCost = assetPreEdit.Asset.BaseResearchCost;
+        ((TeamAsset)element).Asset.Enabled = assetPreEdit.Asset.Enabled;
+        ((TeamAsset)element).Asset.Id = assetPreEdit.Asset.Id;
+        ((TeamAsset)element).Asset.Abbrv = assetPreEdit.Asset.Abbrv;
+        ((TeamAsset)element).Available = assetPreEdit.Available;
+        ((TeamAsset)element).Reserved = assetPreEdit.Reserved;
+        ((TeamAsset)element).Id = assetPreEdit.Id;
+    }
+
+    private void SaveAssetChanges(object element)
+    {
+        var moddedAsset = (TeamAsset)element;
+        var currentStoredAsset = Assets.Find(x => x.Id == moddedAsset.Id);
+        
+        currentStoredAsset.Available = moddedAsset.Available;
+        currentStoredAsset.Reserved = moddedAsset.Reserved;
+    }
+
 }

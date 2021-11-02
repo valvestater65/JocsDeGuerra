@@ -1,0 +1,11 @@
+﻿@page "/admindata" 
+@inject ITeamService teamService
+<h3>AdminData</h3>
+<button @onclick="InitializeTeams">Test</button>
+
+@code {
+
+    private async Task InitializeTeams(){
+        await teamService.InitializeTeams();
+    }
+}

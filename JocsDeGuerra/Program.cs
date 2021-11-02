@@ -1,3 +1,4 @@
+using JocsDeGuerra.Constants;
 using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -22,6 +23,12 @@ namespace JocsDeGuerra
             builder.Services.AddScoped<IMapLocationService, MapLocationService>();
             builder.Services.AddScoped<IAssetService, AssetService>();
             builder.Services.AddScoped<ITeamService, TeamService>();
+
+            var keypath = @"C:\Users\valve\source\repos\JocsDeGuerra\JocsDeGuerra\jocsdeguerra-e3130-firebase-adminsdk-3w007-b737a53aeb.json";
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",keypath);
+
+            builder.Services.AddHttpClient(NamedClients.FIREBASE_CLIENT,
+                client => client.BaseAddress = new Uri("https://firestore.googleapis.com/v1/projects/jocsdeguerra/databases/(default)"));
 
             builder.Services.AddOidcAuthentication(options =>
             {
