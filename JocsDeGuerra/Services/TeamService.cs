@@ -1,10 +1,9 @@
-﻿using Google.Cloud.Firestore;
-using Google.Cloud.Firestore.V1;
+﻿using JocsDeGuerra.Constants;
 using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -14,17 +13,13 @@ namespace JocsDeGuerra.Services
     {
         private readonly IAssetService _assetService;
         private readonly IMapLocationService _mapLocationService;
-        private readonly string _projectId;
-        private readonly FirestoreDb _context;
+        private readonly HttpClient _httpClient;
 
-        public TeamService(IAssetService assetService, IMapLocationService mapLocationService)
+        public TeamService(IAssetService assetService, IMapLocationService mapLocationService, IHttpClientFactory clientFactory)
         {
             _assetService = assetService;
             _mapLocationService = mapLocationService;
-            _projectId = "jocsdeguerra";
-            _context = FirestoreDb.Create(_projectId);
-
-
+            _httpClient = clientFactory.CreateClient(NamedClients.FIREBASE_CLIENT);
         }
 
         public List<TeamAsset> GetTeamAssets()
@@ -50,12 +45,31 @@ namespace JocsDeGuerra.Services
         {
             try
             {
+
+                var teamList = new List<Team> {
+                    new Team{
+                        Id = Guid.NewGuid(),
+                        Name ="Equip Vermell",
+                        BaseExplorationPoints = 3,
+                        BaseProductionPoints = 4,
+                        BaseResearchPoints = 5
+                    },
+                    new Team{
+                        Id = Guid.NewGuid(),
+                        Name ="Equip Blanc",
+                        BaseExplorationPoints = 3,
+                        BaseProductionPoints = 4,
+                        BaseResearchPoints = 5
+                    }
+                };
+
                 var testTeam = new Team
                 {
                     Name = "test"
                 };
 
-                await _context.Collection("teams").AddAsync(JsonSerializer.Serialize(testTeam));
+                var content = new StringContent(JsonSerializer.Serialize(teamList));
+                await _httpClient.PostAsync($"/teams.json?auth=T8hyHa2kgzsIIJdLVvNW8kF6pGOgVqOE5ViJOIrP", content);
             }
             catch (Exception)
             {

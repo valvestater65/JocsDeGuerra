@@ -23,12 +23,14 @@ namespace JocsDeGuerra
             builder.Services.AddScoped<IMapLocationService, MapLocationService>();
             builder.Services.AddScoped<IAssetService, AssetService>();
             builder.Services.AddScoped<ITeamService, TeamService>();
-
-            var keypath = @"C:\Users\valve\source\repos\JocsDeGuerra\JocsDeGuerra\jocsdeguerra-e3130-firebase-adminsdk-3w007-b737a53aeb.json";
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",keypath);
+            builder.Services.AddScoped<ITurnService, TurnService>();
+            builder.Services.AddScoped<IApiService, ApiService>();
+            builder.Services.AddScoped<IResetSystemService, AdminSystemService>();
 
             builder.Services.AddHttpClient(NamedClients.FIREBASE_CLIENT,
-                client => client.BaseAddress = new Uri("https://firestore.googleapis.com/v1/projects/jocsdeguerra/databases/(default)"));
+                client => { 
+                    client.BaseAddress = new Uri("https://jocsdeguerra-e3130-default-rtdb.europe-west1.firebasedatabase.app/");
+                });
 
             builder.Services.AddOidcAuthentication(options =>
             {

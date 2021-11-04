@@ -118,6 +118,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        teamService.InitializeTeams();
         CurrentTorn = new InformeTornViewModel
         {
             Team = new Team
