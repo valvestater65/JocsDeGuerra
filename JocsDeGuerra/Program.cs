@@ -25,7 +25,7 @@ namespace JocsDeGuerra
             builder.Services.AddScoped<ITeamService, TeamService>();
             builder.Services.AddScoped<ITurnService, TurnService>();
             builder.Services.AddScoped<IApiService, ApiService>();
-            builder.Services.AddScoped<IResetSystemService, AdminSystemService>();
+            builder.Services.AddScoped<IAdminSystemService, AdminSystemService>();
 
             builder.Services.AddHttpClient(NamedClients.FIREBASE_CLIENT,
                 client => { 

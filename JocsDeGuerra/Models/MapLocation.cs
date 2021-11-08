@@ -12,5 +12,7 @@ namespace JocsDeGuerra.Models
         public int ExplorationPoints { get; set; }
         public Team Owner { get; set; }
         public string BattleArchetipes { get; set; }
+        public bool IsConquerable { get; set; }
+        public bool IsNeutral { get; set; }
     }
 }

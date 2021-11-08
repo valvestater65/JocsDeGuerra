@@ -1,26 +1,17 @@
 ﻿@page "/admindata" 
 @inject ITeamService teamService
-@inject IResetSystemService resetSystemService
+@inject IAdminSystemService adminSystemService
 
 <h3>AdminData</h3>
-<button @onclick="InitializeTeams">Test</button>
-<button @onclick="ResetSystem">Reseteja sistema</button>
+<MudButton @onclick="ResetSystem" ButtonType="ButtonType.Button" >Reseteja sistema</MudButton>
 <label>@isReset</label>
 
 @code {
 
     private string isReset { get; set; }
 
-
-    private async Task InitializeTeams(){
-        await teamService.InitializeTeams();
-    }
-
     private async Task ResetSystem()
     {
-        if (!await resetSystemService.IsDataInitialized())
-        {
-            isReset = "Esta buida";
-        }
+        await adminSystemService.InitializeAllData();
     }
 }

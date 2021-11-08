@@ -27,7 +27,7 @@ namespace JocsDeGuerra.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonSerializer.Serialize(await response.Content.ReadAsStringAsync());
+                    return await response.Content.ReadAsStringAsync();
                 }
 
                 return null;
@@ -79,7 +79,7 @@ namespace JocsDeGuerra.Services
             }
         }
 
-        public async Task<bool> Delete<T>(string url) where T : new()
+        public async Task<bool> Delete(string url)
         {
             try
             {

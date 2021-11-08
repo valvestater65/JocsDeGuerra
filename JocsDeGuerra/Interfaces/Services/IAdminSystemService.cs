@@ -2,8 +2,9 @@
 
 namespace JocsDeGuerra.Interfaces.Services
 {
-    public interface IResetSystemService
+    public interface IAdminSystemService
     {
         Task<bool> IsDataInitialized();
+        Task<bool> InitializeAllData();
     }
 }

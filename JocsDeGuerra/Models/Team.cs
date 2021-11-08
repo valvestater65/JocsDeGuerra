@@ -19,7 +19,6 @@ namespace JocsDeGuerra.Models
             AvailableAssets = new List<TeamAsset>();
             AvailablePoints = new AccumulatedPoints();
             OwnedLocations = new List<MapLocation>();
-
         }
     }
 }
