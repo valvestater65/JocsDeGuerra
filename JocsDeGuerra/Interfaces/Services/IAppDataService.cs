@@ -7,5 +7,6 @@ namespace JocsDeGuerra.Interfaces.Services
     {
         Turn CurrentTurn { get; set; }
         Team SelectedTeam { get; set; }
+        event Action TeamChanged;
     }
 }

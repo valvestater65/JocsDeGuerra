@@ -9,7 +9,7 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudText Typo="Typo.h2">
-                    @TeamLocations.Sum(x => x.ProductionPoints)
+                    @TeamLocations.Sum(x => x.Location.ProductionPoints)
                 </MudText>
             </MudCardContent>
         </MudCard>
@@ -21,7 +21,7 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudText Typo="Typo.h2">
-                    @TeamLocations.Sum(x => x.ResearchPoints)
+                    @TeamLocations.Sum(x => x.Location.ResearchPoints)
                 </MudText>
             </MudCardContent>
         </MudCard>
@@ -33,7 +33,7 @@
             </MudCardHeader>
             <MudCardContent>
                 <MudText Typo="Typo.h2">
-                    @TeamLocations.Sum(x => x.ExplorationPoints)
+                    @TeamLocations.Sum(x => x.Location.ExplorationPoints)
                 </MudText>
             </MudCardContent>
         </MudCard>
@@ -46,18 +46,20 @@
         <MudButton OnClick="AddEmptyLocation" ButtonType="ButtonType.Button">Afegir</MudButton>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.Name)">Nom</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ProductionPoints)">Producció</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ResearchPoints)">Investigació</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<MapLocation,object>(x => x.ExplorationPoints)">Exploració</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.Name)">Nom</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.ProductionPoints)">Producció</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.ResearchPoints)">Investigació</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.ExplorationPoints)">Exploració</MudTableSortLabel></MudTh>
+        <MudTh>Recursos Assignats</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nom">@context.Name</MudTd>
-        <MudTd DataLabel="Producció">@context.ProductionPoints</MudTd>
-        <MudTd DataLabel="Investigació">@context.ResearchPoints</MudTd>
-        <MudTd DataLabel="Exploració">@context.ExplorationPoints</MudTd>
+        <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
+        <MudTd DataLabel="Producció">@context.Location.ProductionPoints</MudTd>
+        <MudTd DataLabel="Investigació">@context.Location.ResearchPoints</MudTd>
+        <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
+        <MudTd DataLabel="Recursos Assignats">@context.AssignedResources</MudTd>
         <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.Location.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>
@@ -69,17 +71,21 @@
                 }
             </MudSelect>
         </MudTd>
+        <MudTd UserAttributes="@(new Dictionary<string,object>() {{"colspan","4"}} )" DataLabel="Recursos Assignats">
+            <MudTextField @bind-Value="@AssignedResources"></MudTextField>
+        </MudTd>
     </RowEditingTemplate>
 </MudTable> 
 
 
 @code {
     [Parameter]
-    public List<MapLocation> TeamLocations { get; set; }
+    public List<OwnedLocation> TeamLocations { get; set; }
     private List<MapLocation> AvailableLocations { get; set; }
-    private MapLocation selectedLocation = null;
-    private MapLocation itemBeforeEdit = null;
+    private OwnedLocation selectedLocation = null;
+    private OwnedLocation itemBeforeEdit = null;
     private string selectedLocationName;
+    private string AssignedResources { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -91,38 +97,40 @@
     {
         var location = AvailableLocations.Find(x => x.Id.ToString() == selectedLocationName);
 
-        ((MapLocation)element).Name = location.Name;
-        ((MapLocation)element).ProductionPoints = location.ProductionPoints;
-        ((MapLocation)element).ExplorationPoints = location.ExplorationPoints;
-        ((MapLocation)element).ResearchPoints = location.ResearchPoints;
-        ((MapLocation)element).Id = location.Id;
+        ((OwnedLocation)element).Location.Name = location.Name;
+        ((OwnedLocation)element).Location.ProductionPoints = location.ProductionPoints;
+        ((OwnedLocation)element).Location.ExplorationPoints = location.ExplorationPoints;
+        ((OwnedLocation)element).Location.ResearchPoints = location.ResearchPoints;
+        ((OwnedLocation)element).Location.Id = location.Id;
+        ((OwnedLocation)element).AssignedResources = AssignedResources;
         StateHasChanged();
     }
 
     private void AddEmptyLocation()
     {
-        TeamLocations.Add(new MapLocation());
+        TeamLocations.Add(new OwnedLocation());
     }
 
     private void EditBackupItem(object item)
     {
-        itemBeforeEdit = (MapLocation)item;
+        itemBeforeEdit = (OwnedLocation)item;
     }
 
     private void Delete(Guid id)
     {
-        TeamLocations.Remove(TeamLocations.Find(x => x.Id == id));
+        TeamLocations.Remove(TeamLocations.Find(x => x.Location.Id == id));
     }
 
     private void ResetEditItem(object item)
     {
-        ((MapLocation)item).BattleArchetipes = itemBeforeEdit.BattleArchetipes;
-        ((MapLocation)item).ExplorationPoints = itemBeforeEdit.ExplorationPoints;
-        ((MapLocation)item).Id = itemBeforeEdit.Id;
-        ((MapLocation)item).Name = itemBeforeEdit.Name;
-        ((MapLocation)item).Owner = itemBeforeEdit.Owner;
-        ((MapLocation)item).ProductionPoints = itemBeforeEdit.ProductionPoints;
-        ((MapLocation)item).ResearchPoints = itemBeforeEdit.ResearchPoints;
+        ((OwnedLocation)item).Location.BattleArchetipes = itemBeforeEdit.Location.BattleArchetipes;
+        ((OwnedLocation)item).Location.ExplorationPoints = itemBeforeEdit.Location.ExplorationPoints;
+        ((OwnedLocation)item).Location.Id = itemBeforeEdit.Location.Id;
+        ((OwnedLocation)item).Location.Name = itemBeforeEdit.Location.Name;
+        ((OwnedLocation)item).Location.Owner = itemBeforeEdit.Location.Owner;
+        ((OwnedLocation)item).Location.ProductionPoints = itemBeforeEdit.Location.ProductionPoints;
+        ((OwnedLocation)item).Location.ResearchPoints = itemBeforeEdit.Location.ResearchPoints;
+        ((OwnedLocation)item).AssignedResources = itemBeforeEdit.AssignedResources;
 
     }
 }

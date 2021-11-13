@@ -24,9 +24,9 @@ namespace JocsDeGuerra.Models.ViewModels
         public string ExplorationText { get; set; }
         public string ResearchText { get; set; }
         public string IndustryText { get; set; }
-        public int ProductionPoints { get; set; }
-        public int ExplorationPoints { get; set; }
-        public int ResearchPoints { get; set; }
-        public int IndustryPoints { get; set; }
+        public double ProductionPoints { get; set; }
+        public double ExplorationPoints { get; set; }
+        public double ResearchPoints { get; set; }
+        public double IndustryPoints { get; set; }
     }
 }

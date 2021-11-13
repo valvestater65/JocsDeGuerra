@@ -73,7 +73,7 @@ namespace JocsDeGuerra.Services
                 if (await TeamsExist()) {
                     await CleanTeams();
                 }
-                    
+
 
                 var teams = new List<Team> {
                     new Team{
@@ -82,15 +82,20 @@ namespace JocsDeGuerra.Services
                         BaseExplorationPoints = 4 ,
                         BaseProductionPoints = 6,
                         BaseResearchPoints = 3,
-                        OwnedLocations = new List<MapLocation> {
-                            new MapLocation{
-                                 Name ="Base Vermell",
-                                 Id = Guid.NewGuid(),
-                                 ProductionPoints = 2,
-                                 ResearchPoints = 3,
-                                 IsConquerable = false
+                        OwnedLocations = new List<OwnedLocation> {
+                            new OwnedLocation {
+                                Location = new MapLocation{
+                                        Name ="Base Vermell",
+                                        Id = Guid.NewGuid(),
+                                        ProductionPoints = 2,
+                                        ResearchPoints = 3,
+                                        IsConquerable = false
                                 }
+                            }
                         }
+                        
+                        
+                        
                     },
                     new Team{
                         Name = "Equip Blanc",
@@ -98,13 +103,15 @@ namespace JocsDeGuerra.Services
                         BaseExplorationPoints = 4,
                         BaseProductionPoints = 6,
                         BaseResearchPoints = 3,
-                        OwnedLocations = new List<MapLocation> {
-                            new MapLocation{
-                             Name ="Base Blanc",
-                             Id = Guid.NewGuid(),
-                             ProductionPoints = 2,
-                             ResearchPoints = 3,
-                             IsConquerable = false
+                        OwnedLocations = new List<OwnedLocation> {
+                            new OwnedLocation {
+                                Location = new MapLocation{
+                                        Name ="Base Blanc",
+                                        Id = Guid.NewGuid(),
+                                        ProductionPoints = 2,
+                                        ResearchPoints = 3,
+                                        IsConquerable = false
+                                }
                             }
                         }
                     }

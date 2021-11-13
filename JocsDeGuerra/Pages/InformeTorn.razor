@@ -3,7 +3,7 @@
 @inject IAssetService assetsService
 @inject ITeamService teamService
 @inject ITurnService turnService
-@inject AppDataService appDataService
+@inject IAppDataService appDataService
 
 @if (@CurrentTorn != null)
 {
@@ -65,36 +65,38 @@
     </div>
     <div class="row my-2">
         <div class="col">
-            <MudCard Outlined="true">
-                <MudCardHeader>
-                    <CardHeaderContent>
-                        <MudText Typo="Typo.h5">Informe activitats torn</MudText>
-                    </CardHeaderContent>
-                    <CardHeaderActions>
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Desa</MudButton>
-                    </CardHeaderActions>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudGrid>
-                        <MudItem xl="3">
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionText" Label="Producció" Variant="Variant.Text"></MudTextField>
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                        </MudItem>
-                        <MudItem xl="3">
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchText" Label="Recerca" Variant="Variant.Text"></MudTextField>
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                        </MudItem>
-                        <MudItem xl="3">
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationText" Label="Exploració" Variant="Variant.Text"></MudTextField>
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                        </MudItem>
-                        <MudItem xl="3">
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryText" Label="Mineria/Transport" Variant="Variant.Text"></MudTextField>
-                            <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                        </MudItem>
-                    </MudGrid>
-                </MudCardContent>
-            </MudCard>
+            <MudForm @ref="formValues">
+                <MudCard Outlined="true">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h5">Informe activitats torn</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudGrid>
+                            <MudItem xl="3">
+                                <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionText" Label="Producció" Variant="Variant.Text"></MudTextField>
+                                <MudTextField T="double" InputType="InputType.Number" Value="@CurrentTorn.TurnActions.ProductionPoints"  
+                                    Validation="@(new Func<double,string>(ValidateProductionPoints))" Variant="Variant.Text" Label="Punts"></MudTextField>
+                            </MudItem>
+                            <MudItem xl="3">
+                                <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchText" Label="Recerca" Variant="Variant.Text"></MudTextField>
+                                <MudTextField T="double" InputType="InputType.Number" Value="CurrentTorn.TurnActions.ResearchPoints" 
+                                    Validation="@(new Func<double,string>(ValidateResearchPoints))" Variant="Variant.Text" Label="Punts"></MudTextField>
+                            </MudItem>
+                            <MudItem xl="3">
+                                <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationText" Label="Exploració" Variant="Variant.Text"></MudTextField>
+                                <MudTextField T="double" InputType="InputType.Number" Value="CurrentTorn.TurnActions.ExplorationPoints" 
+                                   Validation="@(new Func<double,string>(ValidateExplorationPoints))" Variant="Variant.Text" Label="Punts"></MudTextField>
+                            </MudItem>
+                            <MudItem xl="3">
+                                <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryText" Label="Mineria/Transport" Variant="Variant.Text"></MudTextField>
+                                <MudTextField InputType="InputType.Number" @bind-Value="CurrentTorn.TurnActions.IndustryPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                            </MudItem>
+                        </MudGrid>
+                    </MudCardContent>
+                </MudCard>
+            </MudForm>
         </div>
     </div>
 
@@ -114,6 +116,18 @@
             </MudCard>
         </div>
     </div>
+    <div class="row my-2">
+        <div class="col">
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=MostraAlerta>Finalitza torn</MudButton>
+            <div id="alertaTorn" class="@alertClass">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
+                    Tancar torn no és reversible. N'estas segur?
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" @onclick=TancaTorn>Si</MudButton>
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=AmagaAlerta>No</MudButton>
+                </MudAlert>
+            </div>
+        </div>
+    </div>
 }
 else
 {
@@ -122,11 +136,16 @@ else
 
 
 @code {
+    private MudForm formValues;
     private MudTheme Theme = new MudTheme();
     public InformeTornViewModel CurrentTorn { get; set; }
+    private string alertClass {  get;  set; }
+
 
     protected override async Task OnInitializedAsync()
     {
+        alertClass = "invisible";
+
         CurrentTorn = new InformeTornViewModel
         {
             MapLocations = await locationService.GetLocations(),
@@ -135,8 +154,67 @@ else
             Assets = assetsService.GetAllAssets(),
             Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
         };
+
     }
 
 
+    private string ValidateProductionPoints(double value)
+    {
+        if (value > CurrentTorn.Team.AvailablePoints.ProductionPoints)
+        {
+            return "Punts insuficients";
+        }
+        else
+        {
+            CurrentTorn.TurnActions.ProductionPoints = value; 
+        }
+
+        return null;
+    }
+
+    private string ValidateResearchPoints(double value)
+    {
+        if (value > CurrentTorn.Team.AvailablePoints.ResearchPoints)
+        {
+            return "Punts insuficients";
+        }
+        else
+        {
+            CurrentTorn.TurnActions.ResearchPoints = value; 
+        }
+
+
+        return null;
+    }
+
+    private string ValidateExplorationPoints(double value)
+    {
+        if (value > CurrentTorn.Team.AvailablePoints.ExplorationPoints)
+        {
+            return "Punts insuficients";
+        }
+        else
+        {
+            CurrentTorn.TurnActions.ExplorationPoints = value;
+        }
+
+        return null;
+    }
+
+
+    private void MostraAlerta()
+    {
+        alertClass = "visible";
+    }
+
+    private void AmagaAlerta()
+    {
+        alertClass = "invisible";
+    }
+
+    private void TancaTorn()
+    {
+        Console.WriteLine("tanco torn");
+    }
 
 }

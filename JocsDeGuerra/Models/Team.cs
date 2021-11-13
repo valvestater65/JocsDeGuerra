@@ -11,14 +11,14 @@ namespace JocsDeGuerra.Models
         public int BaseExplorationPoints { get; set; }
         public int BaseResearchPoints { get; set; }
         public AccumulatedPoints AvailablePoints { get; set; }
-        public List<MapLocation> OwnedLocations { get; set; }
+        public List<OwnedLocation> OwnedLocations { get; set; }
         public List<TeamAsset> AvailableAssets { get; set; }
 
         public Team()
         {
             AvailableAssets = new List<TeamAsset>();
             AvailablePoints = new AccumulatedPoints();
-            OwnedLocations = new List<MapLocation>();
+            OwnedLocations = new List<OwnedLocation>();
         }
     }
 }

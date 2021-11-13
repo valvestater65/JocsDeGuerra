@@ -16,7 +16,7 @@ namespace JocsDeGuerra.Services
         private const string TURN_URI = "/turns";
         private readonly ISessionStorageService _sessionStorage;
         private string _sessionKey;
-        public TurnService(IApiService apiService,ITeamService teamService, AppDataService appdata, ISessionStorageService session)
+        public TurnService(IApiService apiService,ITeamService teamService, ISessionStorageService session)
         {
             _apiService = apiService;
             _teamService = teamService;
@@ -80,7 +80,7 @@ namespace JocsDeGuerra.Services
 
                 return currentTurn;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return new Turn();
@@ -113,6 +113,7 @@ namespace JocsDeGuerra.Services
         {
             try
             {
+                //TODO: May need to save in session here? 
                 var result = await _apiService.Put(TURN_URI, turns);
                 return result < 0;
             }
@@ -199,9 +200,12 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-                if (_appData.CurrentTurn != null)
+                var turnList = await GetCurrentTurn();    
+
+                
+                if (turnList != null)
                 { 
-                    return _appData.CurrentTurn.Teams.Where(x => x.Id == teamId).FirstOrDefault();
+                    return turnList.Teams.Where(x => x.Id == teamId).FirstOrDefault();
                 }
 
                 return null;

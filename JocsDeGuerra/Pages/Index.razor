@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject ITeamService teamService
-@inject AppDataService appDataService
+@inject IAppDataService dataService; 
+
 
 <h1>Jocs de Guerra</h1>
 
@@ -22,7 +23,7 @@
     private Team SelectedTeam { get => _boundedTeam;
         set
         {
-            appDataService.SelectedTeam = value;
+            dataService.SelectedTeam = value;
             _boundedTeam = value;
         } 
     }
@@ -30,7 +31,7 @@
     private void SetSelectedTeam(Team team)
     {
         SelectedTeam = team;
-        appDataService.SelectedTeam = team;
+        dataService.SelectedTeam = team;
     }
 
     protected override async Task OnInitializedAsync()

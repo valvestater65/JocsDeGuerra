@@ -1,0 +1,6 @@
+﻿.visible {
+    display:block;
+}
+.invisible {
+    visibility:hidden;
+}
