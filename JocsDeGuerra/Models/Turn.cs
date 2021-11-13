@@ -10,5 +10,6 @@ namespace JocsDeGuerra.Models
         public bool Completed { get; set; }
         public List<Team> Teams { get; set; }
         public Battle Battle { get; set; }
+        public bool Current { get; set; }
     }
 }

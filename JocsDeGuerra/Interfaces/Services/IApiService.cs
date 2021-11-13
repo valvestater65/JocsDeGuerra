@@ -8,5 +8,6 @@ namespace JocsDeGuerra.Interfaces.Services
         Task<string> Get(string uri);
         Task<int> Post<T>(string url, T payload) where T : new();
         Task<int> Put<T>(string url, T payload) where T : new();
+        Task<bool> Patch<T>(string url, T payload) where T : new();
     }
 }

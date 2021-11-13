@@ -9,6 +9,13 @@ namespace JocsDeGuerra.Models.ViewModels
         public List<MapLocation> MapLocations { get; set; }
         public List<Asset> Assets { get; set; }
         public TurnActionsViewModel TurnActions { get; set; }
+
+        public InformeTornViewModel()
+        {
+            TurnActions = new TurnActionsViewModel();
+            MapLocations =  new List<MapLocation>();
+            Assets = new List<Asset>();
+        }
     }
 
     public class TurnActionsViewModel

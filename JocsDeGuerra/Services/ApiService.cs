@@ -99,5 +99,21 @@ namespace JocsDeGuerra.Services
             }
         }
 
+        public async Task<bool> Patch<T>(string url, T payload) where T : new()
+        {
+            try
+            {
+                var content = new StringContent(JsonSerializer.Serialize(payload));
+                var response = await _client.PatchAsync($"{url}.json?auth={KEY}", content);
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
     }
 }

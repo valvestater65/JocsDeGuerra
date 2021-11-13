@@ -138,6 +138,7 @@ namespace JocsDeGuerra.Services
             try
             {
                 var teams = await _apiService.Get(TEAM_URL);
+
                 if (string.IsNullOrEmpty(teams))
                     return null;
 
@@ -151,43 +152,5 @@ namespace JocsDeGuerra.Services
                 throw;
             }
         }
-
-
-
-        //public async Task InitializeTeams()
-        //{
-        //    try
-        //    {
-
-        //        var teamList = new List<Team> {
-        //            new Team{
-        //                Id = Guid.NewGuid(),
-        //                Name ="Equip Vermell",
-        //                BaseExplorationPoints = 3,
-        //                BaseProductionPoints = 4,
-        //                BaseResearchPoints = 5
-        //            },
-        //            new Team{
-        //                Id = Guid.NewGuid(),
-        //                Name ="Equip Blanc",
-        //                BaseExplorationPoints = 3,
-        //                BaseProductionPoints = 4,
-        //                BaseResearchPoints = 5
-        //            }
-        //        };
-
-        //        var testTeam = new Team
-        //        {
-        //            Name = "test"
-        //        };
-
-        //        var content = new StringContent(JsonSerializer.Serialize(teamList));
-        //        await _httpClient.PostAsync($"/teams.json?auth=T8hyHa2kgzsIIJdLVvNW8kF6pGOgVqOE5ViJOIrP", content);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
     }
 }

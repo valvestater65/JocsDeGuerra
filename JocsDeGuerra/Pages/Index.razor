@@ -1,9 +1,46 @@
 ﻿@page "/"
+@inject ITeamService teamService
+@inject AppDataService appDataService
 
 <h1>Jocs de Guerra</h1>
 
-<div class="alert alert-warning" role="alert">
-    JA li posarem continguts aqui ... 
-    Before authentication will function correctly, you must configure your provider details in <code>Program.cs</code>
-</div>
+<MudAlert Severity="Severity.Error" Variant="Variant.Filled">Cal seleccionar un equip avans de començar</MudAlert>
+@if (SelectableTeams != null)
+{
+    <MudSelect @bind-Value="SelectedTeam">
+        @foreach (var team in SelectableTeams)
+        {
+        <MudSelectItem Value="@team">@team.Name</MudSelectItem>
+        }
+    </MudSelect>
+}
+
+
+@code{
+    private List<Team> SelectableTeams { get; set; }
+    private Team _boundedTeam;
+    private Team SelectedTeam { get => _boundedTeam;
+        set
+        {
+            appDataService.SelectedTeam = value;
+            _boundedTeam = value;
+        } 
+    }
+
+    private void SetSelectedTeam(Team team)
+    {
+        SelectedTeam = team;
+        appDataService.SelectedTeam = team;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetTeams();
+    }
+
+    private async Task GetTeams()
+    {
+        SelectableTeams = await teamService.GetTeams();
+    }
+}
 

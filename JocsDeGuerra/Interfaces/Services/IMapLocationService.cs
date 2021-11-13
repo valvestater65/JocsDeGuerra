@@ -6,7 +6,6 @@ namespace JocsDeGuerra.Interfaces.Services
 {
     public interface IMapLocationService
     {
-        List<MapLocation> GetAllLocations();
         Task<bool> LocationsExist();
         Task<List<MapLocation>> GetLocations();
         Task<bool> InitializeLocations();

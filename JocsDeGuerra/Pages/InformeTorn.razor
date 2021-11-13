@@ -3,114 +3,122 @@
 @inject IAssetService assetsService
 @inject ITeamService teamService
 @inject ITurnService turnService
+@inject AppDataService appDataService
 
-<h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber - Equip @CurrentTorn.Team.Name</h3>
-<div class="row">
-    <div class="col">
-        <MudCard Outlined="true">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h5">Punts disponibles</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudGrid>
-                    <MudItem xl="3">
-                        <MudCard Class="mud-theme-primary">
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h4">Producció</MudText>
-                            </MudCardHeader>
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ProductionPoints</MudText>
-                            </MudCardHeader>
-                        </MudCard>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudCard Style="@($"color:{Theme.Palette.Dark}; background:{Theme.Palette.Warning};")">
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h4">Recerca</MudText>
-                            </MudCardHeader>
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ResearchPoints</MudText>
-                            </MudCardHeader>
-                        </MudCard>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudCard Style="@($"color:{Theme.Palette.White}; background:{Theme.Palette.Black};")">
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h4">Exploració</MudText>
-                            </MudCardHeader>
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ExplorationPoints</MudText>
-                            </MudCardHeader>
-                        </MudCard>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudCard Style="@($"color:{Theme.Palette.PrimaryLighten}; background:{Theme.Palette.DarkLighten};")">
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h4">Industria</MudText>
-                            </MudCardHeader>
-                            <MudCardHeader>
-                                <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.IndustryPoints</MudText>
-                            </MudCardHeader>
-                        </MudCard>
-                    </MudItem>
-                </MudGrid>
-            </MudCardContent>
-        </MudCard>
+@if (@CurrentTorn != null)
+{
+    <h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber - @appDataService.SelectedTeam.Name</h3>
+    <div class="row">
+        <div class="col">
+            <MudCard Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Punts disponibles</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xl="3">
+                            <MudCard Class="mud-theme-primary">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h4">Producció</MudText>
+                                </MudCardHeader>
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ProductionPoints</MudText>
+                                </MudCardHeader>
+                            </MudCard>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudCard Style="@($"color:{Theme.Palette.Dark}; background:{Theme.Palette.Warning};")">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h4">Recerca</MudText>
+                                </MudCardHeader>
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ResearchPoints</MudText>
+                                </MudCardHeader>
+                            </MudCard>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudCard Style="@($"color:{Theme.Palette.White}; background:{Theme.Palette.Black};")">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h4">Exploració</MudText>
+                                </MudCardHeader>
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ExplorationPoints</MudText>
+                                </MudCardHeader>
+                            </MudCard>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudCard Style="@($"color:{Theme.Palette.PrimaryLighten}; background:{Theme.Palette.DarkLighten};")">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h4">Industria</MudText>
+                                </MudCardHeader>
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.IndustryPoints</MudText>
+                                </MudCardHeader>
+                            </MudCard>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </div>
     </div>
-</div>
-<div class="row my-2">
-    <div class="col">
-        <MudCard Outlined="true">
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h5">Informe activitats torn</MudText>
-                </CardHeaderContent>
-                <CardHeaderActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Desa</MudButton>
-                </CardHeaderActions>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudGrid>
-                    <MudItem xl="3">
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionText" Label="Producció" Variant="Variant.Text"></MudTextField>
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchText" Label="Recerca" Variant="Variant.Text"></MudTextField>
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationText" Label="Exploració" Variant="Variant.Text"></MudTextField>
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                    </MudItem>
-                    <MudItem xl="3">
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryText" Label="Mineria/Transport" Variant="Variant.Text"></MudTextField>
-                        <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
-                    </MudItem>
-                </MudGrid>
-            </MudCardContent>
-        </MudCard>
+    <div class="row my-2">
+        <div class="col">
+            <MudCard Outlined="true">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h5">Informe activitats torn</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary">Desa</MudButton>
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudGrid>
+                        <MudItem xl="3">
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionText" Label="Producció" Variant="Variant.Text"></MudTextField>
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ProductionPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchText" Label="Recerca" Variant="Variant.Text"></MudTextField>
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ResearchPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationText" Label="Exploració" Variant="Variant.Text"></MudTextField>
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.ExplorationPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                        </MudItem>
+                        <MudItem xl="3">
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryText" Label="Mineria/Transport" Variant="Variant.Text"></MudTextField>
+                            <MudTextField @bind-Value="CurrentTorn.TurnActions.IndustryPoints" Variant="Variant.Text" Label="Punts"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                </MudCardContent>
+            </MudCard>
+        </div>
     </div>
-</div>
 
-<div class="row my-2">
-    <div class="col">
-        <MudCard Outlined="true">
-            <MudCardContent>
-                <TaulaUbicacions TeamLocations="CurrentTorn.Team.OwnedLocations" />
-            </MudCardContent>
-        </MudCard>
+    <div class="row my-2">
+        <div class="col">
+            <MudCard Outlined="true">
+                <MudCardContent>
+                    <TaulaUbicacions TeamLocations="CurrentTorn.Team.OwnedLocations" />
+                </MudCardContent>
+            </MudCard>
+        </div>
+        <div class="col">
+            <MudCard Outlined="true">
+                <MudCardContent>
+                    <LlistaAssets Assets="CurrentTorn.Team.AvailableAssets" />
+                </MudCardContent>
+            </MudCard>
+        </div>
     </div>
-    <div class="col">
-        <MudCard Outlined="true">
-            <MudCardContent>
-                <LlistaAssets Assets="CurrentTorn.Team.AvailableAssets" />
-            </MudCardContent>
-        </MudCard>
-    </div>
-</div>
+}
+else
+{
+    <MudText>Carregant...</MudText>
+}
 
 
 @code {
@@ -121,25 +129,14 @@
     {
         CurrentTorn = new InformeTornViewModel
         {
-            Team = new Team
-            {
-                Name = "Test",
-                AvailablePoints = new AccumulatedPoints
-                {
-                    ExplorationPoints = 3,
-                    IndustryPoints = 3,
-                    ProductionPoints = 3,
-                    ResearchPoints = 3
-                },
-                AvailableAssets = teamService.GetTeamAssets()
-            },
-            MapLocations = locationService.GetAllLocations(),
-            CurrentTurn = new Turn
-            {
-                TurnNumber = 1
-            },
+            MapLocations = await locationService.GetLocations(),
+            CurrentTurn = await turnService.GetCurrentTurn(),
             TurnActions = new TurnActionsViewModel(),
-            Assets = assetsService.GetAllAssets()
+            Assets = assetsService.GetAllAssets(),
+            Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
         };
     }
+
+
+
 }

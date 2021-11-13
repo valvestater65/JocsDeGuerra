@@ -7,10 +7,12 @@ namespace JocsDeGuerra.Interfaces.Services
 {
     public interface ITurnService
     {
-        Task<bool> AddTurn(Turn turn);
+        Task<bool> AddTurns(List<Turn> turn);
         Task<Turn> GetById(Guid id);
         Task<List<Turn>> GetTurns();
         Task<bool> UpdateTurn(Turn turn);
         Task<bool> TurnsExist();
+        Task<Turn> GetCurrentTurn();
+        Task<Team> GetCurrentTurnTeam(Guid teamId);
     }
 }

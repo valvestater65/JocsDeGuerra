@@ -84,7 +84,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AvailableLocations = locationService.GetAllLocations();
+        AvailableLocations = await locationService.GetLocations();
     }
 
     private void ItemEditSaved(object element)

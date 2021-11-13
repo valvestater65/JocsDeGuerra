@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AppDataService appDataService
 
 
 <MudLayout>
@@ -6,6 +7,10 @@
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Typo="Typo.h5" Class="ml-3">Jocs de Guerra</MudText>
         <MudSpacer />
+        @if (appDataService.SelectedTeam != null)
+        {
+            <MudText>@appDataService.SelectedTeam.Name</MudText>
+        }
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -16,23 +21,6 @@
     </MudMainContent>
 </MudLayout>
 
-@*<div class="page">
-    <div class="sidebar">
-        
-    </div>
-
-    <div class="main">
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
-            @Body
-        </div>
-    </div>
-</div>*@
-
 @code {
     bool _drawerOpen = true;
 
@@ -40,4 +28,12 @@
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    protected override void OnInitialized() => appDataService.TeamChanged += StateHasChanged;
+
+    public void Dispose()
+    {
+        appDataService.TeamChanged -= StateHasChanged;
+    }
+
 }

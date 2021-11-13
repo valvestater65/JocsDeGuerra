@@ -1,3 +1,4 @@
+using Blazored.SessionStorage;
 using JocsDeGuerra.Constants;
 using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Services;
@@ -26,6 +27,9 @@ namespace JocsDeGuerra
             builder.Services.AddScoped<ITurnService, TurnService>();
             builder.Services.AddScoped<IApiService, ApiService>();
             builder.Services.AddScoped<IAdminSystemService, AdminSystemService>();
+            builder.Services.AddSingleton<AppDataService>();
+
+            builder.Services.AddBlazoredSessionStorage();
 
             builder.Services.AddHttpClient(NamedClients.FIREBASE_CLIENT,
                 client => { 

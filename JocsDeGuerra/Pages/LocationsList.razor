@@ -23,7 +23,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MapLocations = locationService.GetAllLocations().ToList();
+        MapLocations = await locationService.GetLocations();
     }
 
 }
