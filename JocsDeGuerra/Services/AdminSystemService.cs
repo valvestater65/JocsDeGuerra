@@ -1,10 +1,5 @@
-﻿using JocsDeGuerra.Constants;
-using JocsDeGuerra.Interfaces.Services;
-using JocsDeGuerra.Models;
+﻿using JocsDeGuerra.Interfaces.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace JocsDeGuerra.Services
@@ -13,17 +8,17 @@ namespace JocsDeGuerra.Services
     {
         private readonly ITurnService _turnService;
         private readonly ITeamService _teamService;
-        private readonly IMapLocationService _mapLocationService; 
+        private readonly IMapLocationService _mapLocationService;
+        private readonly IAssetService _assetService;
 
 
-        public AdminSystemService(ITurnService turnService, ITeamService teamService, IMapLocationService locationService)
+        public AdminSystemService(ITurnService turnService, ITeamService teamService, IMapLocationService locationService, IAssetService assetService)
         {
             _turnService = turnService;
             _teamService = teamService;
             _mapLocationService = locationService;
+            _assetService = assetService;
         }
-
-
 
         public async Task<bool> IsDataInitialized()
         {
@@ -47,6 +42,7 @@ namespace JocsDeGuerra.Services
             {
                 await _teamService.InitializeTeams();
                 await _mapLocationService.InitializeLocations();
+                await _assetService.InitializeAssets();
 
                 return true;
             }
@@ -63,9 +59,6 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-                
-
-
 
             }
             catch (Exception)

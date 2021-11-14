@@ -21,22 +21,32 @@ namespace JocsDeGuerra.Services
             _apiService = apiService;
         }
 
-        public List<TeamAsset> GetTeamAssets()
+        public async Task<List<TeamAsset>> GetTeamAssets()
         {
-            var assets = _assetService.GetAllAssets();
-            var retList = new List<TeamAsset>();
-
-            assets.ForEach(x =>
+            try
             {
-                retList.Add(new TeamAsset
-                {
-                    Asset = x,
-                    Available = 0,
-                    Reserved = 0
-                });
-            });
+                var assets = await _assetService.GetAssets();
 
-            return retList;
+                if (assets == null)
+                    return null;
+                var retList = new List<TeamAsset>();
+
+                assets.ForEach(x =>
+                {
+                    retList.Add(new TeamAsset
+                    {
+                        Asset = x,
+                        Available = (x.Abbrv.ToUpper() == "TE") ? 1:0,
+                        Reserved = 0
+                    }) ;
+                });
+
+                return retList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public async Task<bool> TeamsExist()
@@ -92,10 +102,8 @@ namespace JocsDeGuerra.Services
                                         IsConquerable = false
                                 }
                             }
-                        }
-                        
-                        
-                        
+                        },
+                        AvailableAssets = await GetTeamAssets()
                     },
                     new Team{
                         Name = "Equip Blanc",
@@ -113,7 +121,8 @@ namespace JocsDeGuerra.Services
                                         IsConquerable = false
                                 }
                             }
-                        }
+                        },
+                        AvailableAssets= await GetTeamAssets()
                     }
                 };
 
@@ -125,7 +134,6 @@ namespace JocsDeGuerra.Services
                 return false;
             }
         }
-
 
         public async Task<bool> CreateTeam(Team team)
         {

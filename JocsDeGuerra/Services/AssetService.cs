@@ -1,7 +1,10 @@
-﻿using JocsDeGuerra.Interfaces.Services;
+﻿using Blazored.SessionStorage;
+using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Models;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace JocsDeGuerra.Services
@@ -9,7 +12,62 @@ namespace JocsDeGuerra.Services
     public class AssetService : IAssetService
     {
 
-        public List<Asset> GetAllAssets()
+        private readonly string _assetURI = "/assets";
+        private readonly string _sessionKey = "dbassets";
+        private readonly IApiService _apiService;
+        private readonly ISessionStorageService _sessionService;
+
+        public AssetService(IApiService apiService, ISessionStorageService sessionStorage)
+        {
+            _apiService = apiService;   
+            _sessionService = sessionStorage;
+        }
+
+
+
+        public async Task<bool> InitializeAssets()
+        {
+            try
+            {
+                var result = await _apiService.Put(_assetURI, GetAllAssets());
+
+                return result == 0;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<Asset>> GetAssets()
+        {
+            try
+            {
+                var assets = await _sessionService.GetItemAsync<List<Asset>>(_sessionKey);
+
+                if (assets != null)
+                    return assets;
+
+                var dbAssetsStr = await _apiService.Get(_assetURI);
+
+                if (!string.IsNullOrEmpty(dbAssetsStr))
+                { 
+                    var dbAssets = JsonSerializer.Deserialize<List<Asset>>(dbAssetsStr);
+                    await _sessionService.SetItemAsync(_sessionKey, dbAssets);
+                    return dbAssets;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+        }
+            
+
+        private List<Asset> GetAllAssets()
         {
 
             return new List<Asset> {

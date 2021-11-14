@@ -115,7 +115,7 @@ namespace JocsDeGuerra.Services
             {
                 //TODO: May need to save in session here? 
                 var result = await _apiService.Put(TURN_URI, turns);
-                return result < 0;
+                return result == 0;
             }
             catch (Exception)
             {

@@ -6,6 +6,8 @@ namespace JocsDeGuerra.Interfaces.Services
 {
     public interface IAssetService
     {
-        List<Asset> GetAllAssets();
+        
+        Task<bool> InitializeAssets();
+        Task<List<Asset>> GetAssets();
     }
 }

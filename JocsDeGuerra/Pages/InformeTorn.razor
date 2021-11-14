@@ -151,7 +151,7 @@ else
             MapLocations = await locationService.GetLocations(),
             CurrentTurn = await turnService.GetCurrentTurn(),
             TurnActions = new TurnActionsViewModel(),
-            Assets = assetsService.GetAllAssets(),
+            Assets = await assetsService.GetAssets(),
             Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
         };
 
