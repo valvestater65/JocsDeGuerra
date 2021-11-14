@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JocsDeGuerra.Models.ViewModels
 {
     public class InformeTornViewModel
     {
+
+        public Guid Id { get; set; }
         public Turn CurrentTurn { get; set; }
         public Team Team { get; set; }
         public List<MapLocation> MapLocations { get; set; }

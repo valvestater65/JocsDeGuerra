@@ -6,6 +6,7 @@ namespace JocsDeGuerra.Models
     {
         public MapLocation Location { get; set; } = new MapLocation();
         public string AssignedResources { get; set; } = "";
+        public bool New { get; set; } = true;
 
 
         public OwnedLocation()

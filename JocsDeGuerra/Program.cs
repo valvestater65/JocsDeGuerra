@@ -28,6 +28,7 @@ namespace JocsDeGuerra
             builder.Services.AddScoped<IApiService, ApiService>();
             builder.Services.AddScoped<IAdminSystemService, AdminSystemService>();
             builder.Services.AddScoped<IAppDataService,AppDataService>();
+            builder.Services.AddScoped<IInformeTornViewModelService, InformeTornViewModelService>();
 
             builder.Services.AddBlazoredSessionStorage();
 

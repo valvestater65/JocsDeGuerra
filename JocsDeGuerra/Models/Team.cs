@@ -13,6 +13,7 @@ namespace JocsDeGuerra.Models
         public AccumulatedPoints AvailablePoints { get; set; }
         public List<OwnedLocation> OwnedLocations { get; set; }
         public List<TeamAsset> AvailableAssets { get; set; }
+        public bool ReadyToClose { get; set; } = false;
 
         public Team()
         {

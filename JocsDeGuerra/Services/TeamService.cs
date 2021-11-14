@@ -100,7 +100,8 @@ namespace JocsDeGuerra.Services
                                         ProductionPoints = 2,
                                         ResearchPoints = 3,
                                         IsConquerable = false
-                                }
+                                },
+                                New = false
                             }
                         },
                         AvailableAssets = await GetTeamAssets()
@@ -119,7 +120,8 @@ namespace JocsDeGuerra.Services
                                         ProductionPoints = 2,
                                         ResearchPoints = 3,
                                         IsConquerable = false
-                                }
+                                },
+                                New = false
                             }
                         },
                         AvailableAssets= await GetTeamAssets()

@@ -4,6 +4,7 @@
 @inject ITeamService teamService
 @inject ITurnService turnService
 @inject IAppDataService appDataService
+@inject IInformeTornViewModelService informeTornViewModelService
 
 @if (@CurrentTorn != null)
 {
@@ -118,6 +119,13 @@
     </div>
     <div class="row my-2">
         <div class="col">
+            <MudAlert Severity="Severity.Success" ContentAlignment="HorizontalAlignment.Start" Variant="Variant.Filled">
+                Equip llest per tancar torn? <MudCheckBox @bind-Checked="@CurrentTorn.Team.ReadyToClose" Color="Color.Secondary"></MudCheckBox>
+            </MudAlert>
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col">
             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=MostraAlerta>Finalitza torn</MudButton>
             <div id="alertaTorn" class="@alertClass">
                 <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
@@ -146,14 +154,22 @@ else
     {
         alertClass = "invisible";
 
-        CurrentTorn = new InformeTornViewModel
-        {
-            MapLocations = await locationService.GetLocations(),
-            CurrentTurn = await turnService.GetCurrentTurn(),
-            TurnActions = new TurnActionsViewModel(),
-            Assets = await assetsService.GetAssets(),
-            Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
-        };
+        //TODO:
+         /*
+         * Obtenir del service l'informe de torn de l'equip actual per al torn actual. Sino, crearlo.
+         * La inicialització la farem al service directament.  
+        */
+        var currentTurn = await turnService.GetCurrentTurn();
+        CurrentTorn = await informeTornViewModelService.GetbyTeamAndTurn(appDataService.SelectedTeam, currentTurn);
+
+        //CurrentTorn = new InformeTornViewModel
+        //{
+        //    MapLocations = await locationService.GetLocations(),
+        //    CurrentTurn = await turnService.GetCurrentTurn(),
+        //    TurnActions = new TurnActionsViewModel(),
+        //    Assets = await assetsService.GetAssets(),
+        //    Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
+        //};
 
     }
 

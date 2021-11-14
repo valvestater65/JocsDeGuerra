@@ -1,6 +1,7 @@
 ﻿using Blazored.SessionStorage;
 using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Models;
+using JocsDeGuerra.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -216,6 +217,53 @@ namespace JocsDeGuerra.Services
                 throw;
             }
         }
+
+        public async Task<bool> SaveTurn(InformeTornViewModel viewModel)
+        {
+            try
+            {
+                if (viewModel.CurrentTurn.Teams.Any(x => !x.ReadyToClose))
+                {
+                    //Els dos equips no estan ready, no podem tancar torn. 
+                    return false;
+                }
+
+                var currentTurn = await GetCurrentTurn();
+
+                var index = currentTurn.Teams.FindIndex(x => x.Id == viewModel.Team.Id);
+                currentTurn.Teams.Remove(currentTurn.Teams.ElementAt(index));
+                currentTurn.Teams.Add(viewModel.Team);  
+                
+
+                 
+
+
+
+
+
+                return false;
+
+                //TODO:
+                /*
+                 * 2. viewModel teams --> turn teams
+                 * 3. Recalcular available points (nomes amb !New locations)
+                 * 4. Current torn tancat (boolean true)
+                 * 5. Crear nou torn (nou current torn)
+                 * 6. OwnedLocation nou torn --> New = false
+                 * 7. Update llista de turns. 
+                 */
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private AccumulatedPoints CalculateAvailablePoints(Turn currentTurn, InformeTornViewModel viewModel)
+        {
+            throw new NotImplementedException();
+        }
+
 
     }
 }
