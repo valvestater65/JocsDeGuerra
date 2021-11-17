@@ -105,7 +105,7 @@ namespace JocsDeGuerra.Services
                 },
                 new Asset{
                     Id = Guid.NewGuid(),
-                    Name = "Gladiator/Harbringer",
+                    Name = "Bombarder Lleuger (Gladiator/Harbringer)",
                     Abbrv = "BL",
                     BaseProductionCost = 7,
                     BaseResearchCost =16,
@@ -114,22 +114,30 @@ namespace JocsDeGuerra.Services
                 new Asset{
                     Id = Guid.NewGuid(),
                     Name = "Redeemer",
-                    Abbrv = "RD",
+                    Abbrv = "RE",
                     BaseProductionCost = 8,
                     BaseResearchCost =16,
                     Enabled = false
                 },
                 new Asset{
                     Id = Guid.NewGuid(),
-                    Name = "Eclipse",
-                    Abbrv = "EC",
+                    Name = "Ares",
+                    Abbrv = "AR",
                     BaseProductionCost = 12,
                     BaseResearchCost =16,
                     Enabled = false
                 },
                 new Asset{
                     Id = Guid.NewGuid(),
-                    Name = "Retaliator",
+                    Name = "Bombarder Mitjà (Eclipse)",
+                    Abbrv = "BM",
+                    BaseProductionCost = 12,
+                    BaseResearchCost =16,
+                    Enabled = false
+                },
+                new Asset{
+                    Id = Guid.NewGuid(),
+                    Name = "Bombarder Pesat (Retaliator)",
                     Abbrv = "BP",
                     BaseProductionCost = 20,
                     BaseResearchCost =28,
@@ -170,7 +178,7 @@ namespace JocsDeGuerra.Services
                 new Asset{
                     Id = Guid.NewGuid(),
                     Name = "Nova Tank",
-                    Abbrv = "EC",
+                    Abbrv = "NT",
                     BaseProductionCost = 10,
                     BaseResearchCost =16,
                     Enabled = false

@@ -1,4 +1,5 @@
-﻿using JocsDeGuerra.Constants;
+﻿using Blazored.SessionStorage;
+using JocsDeGuerra.Constants;
 using JocsDeGuerra.Interfaces.Services;
 using JocsDeGuerra.Models;
 using System;
@@ -12,11 +13,14 @@ namespace JocsDeGuerra.Services
     public class MapLocationService : IMapLocationService
     {
         private readonly IApiService _apiService;
+        private readonly ISessionStorageService _sessionService;
         private const string LOCATION_URI = "/locations";
+        private const string SESSION_KEY = "locations";
 
-        public MapLocationService(IApiService api)
+        public MapLocationService(IApiService api,ISessionStorageService session)
         {
             _apiService = api;
+            _sessionService = session;
         }
 
 
@@ -49,12 +53,20 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-                var locations = await _apiService.Get(LOCATION_URI);
+                var locationList = await _sessionService.GetItemAsync<List<MapLocation>>(SESSION_KEY);
 
-                if (string.IsNullOrEmpty(locations))
+                if (locationList != null && locationList.Count > 0)
+                    return locationList;
+                
+                var locationstr = await _apiService.Get(LOCATION_URI);
+
+                if (string.IsNullOrEmpty(locationstr))
                     return null;
+                
+                var locations = JsonSerializer.Deserialize<List<MapLocation>>(locationstr);
+                await _sessionService.SetItemAsync(SESSION_KEY, locations);
 
-                return JsonSerializer.Deserialize<List<MapLocation>>(locations);
+                return locations;
             }
             catch (Exception)
             {

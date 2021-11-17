@@ -13,22 +13,32 @@ namespace JocsDeGuerra.Services
     public class InformeTornViewModelService : IInformeTornViewModelService
     {
         private readonly IApiService _apiService;
-        private readonly ITurnService _turnService;
         private readonly ISessionStorageService _sessionService;
+        private readonly IAssetService _assetService;
+        private readonly IMapLocationService _mapLocationService;
         private readonly string _dbKey = "/informeTorn";
         private readonly string _sessionKey = "informeTorns";
 
-        public InformeTornViewModelService(IApiService apiService, ITurnService turnService, ISessionStorageService sessionStorage)
+        public InformeTornViewModelService(IApiService apiService, ISessionStorageService sessionStorage,
+            IAssetService assetService, IMapLocationService mapLocationService )
         {
             _apiService = apiService;
-            _turnService = turnService;
             _sessionService = sessionStorage;
+            _assetService = assetService;
+            _mapLocationService = mapLocationService;
         }
 
-        public async Task<bool> AddInformeTorn(InformeTornViewModel viewModel)
+        public async Task<bool> AddInformeTorn(List<InformeTornViewModel> viewModel)
         {
             try
             {
+                var informesSession = await _sessionService.GetItemAsync<List<InformeTornViewModel>>(_sessionKey);
+
+                if (informesSession != null)
+                { 
+                    await _sessionService.RemoveItemAsync(_sessionKey);
+                }
+
                 var result = await _apiService.Put(_dbKey, viewModel);
 
                 return result == 0;
@@ -37,17 +47,15 @@ namespace JocsDeGuerra.Services
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
-
 
         public async Task<InformeTornViewModel> GetbyTeam(Team team)
         {
             try
             {
-                var informeTorns = await GetInformeTorn();
+                var informeTorns = await GetAll();
 
                 if (informeTorns == null || informeTorns.Count == 0)
                     return null;
@@ -61,12 +69,60 @@ namespace JocsDeGuerra.Services
             }
         }
 
-        public Task<InformeTornViewModel> GetbyTeamAndTurn(Team team, Turn currentTurn)
+        public async Task<InformeTornViewModel> GetbyTeamAndTurn(Team team, Turn currentTurn)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var informeTorn = (await GetAll())?.Where(it => it.Team.Id == team.Id && it.CurrentTurn.Id == currentTurn.Id).FirstOrDefault();
+
+                if (informeTorn == null)
+                {
+                    var retInforme = await CreateInformeTorn(team, currentTurn);
+                    return retInforme;
+                }
+
+                return informeTorn;
+
+
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
-        public async Task<List<InformeTornViewModel>> GetInformeTorn()
+        private async Task<InformeTornViewModel> CreateInformeTorn(Team team, Turn turn)
+        {
+
+
+            var teamTurn = turn.Teams.Find(x => x.Id == team.Id);
+
+            var newInforme = new InformeTornViewModel
+            {
+                CurrentTurn = turn,
+                Team = teamTurn,
+                TurnActions = new TurnActionsViewModel(),
+                Assets = await _assetService.GetAssets(),
+                MapLocations = await _mapLocationService.GetLocations(),
+                Id = Guid.NewGuid()
+
+            };
+
+            var informeTorns = await GetAll();
+
+            if (informeTorns == null)
+            {
+                informeTorns = new List<InformeTornViewModel>();
+            }
+
+            informeTorns.Add(newInforme);
+
+            await AddInformeTorn(informeTorns);
+            return newInforme;
+        }
+
+        public async Task<List<InformeTornViewModel>> GetAll()
         {
             try
             {
@@ -77,9 +133,11 @@ namespace JocsDeGuerra.Services
 
                 var informeTornStr = await _apiService.Get(_dbKey);
 
-                if (!string.IsNullOrEmpty(informeTornStr))
+                if (!string.IsNullOrEmpty(informeTornStr) && informeTornStr != "null")
                 {
-                    return JsonSerializer.Deserialize<List<InformeTornViewModel>>(informeTornStr);
+                    var dbInformeTorn =  JsonSerializer.Deserialize<List<InformeTornViewModel>>(informeTornStr);
+                    await _sessionService.SetItemAsync(_sessionKey, dbInformeTorn);
+                    return dbInformeTorn;
                 }
 
                 return null;
@@ -97,7 +155,16 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-                return await _apiService.Delete(_dbKey);
+
+                if (await _apiService.Delete(_dbKey))
+                {
+                    if (await _sessionService.ContainKeyAsync(_sessionKey))
+                    { 
+                        await _sessionService.RemoveItemAsync(_sessionKey);
+                    }
+                    return true;
+                }
+                return false;
 
             }
             catch (Exception)
@@ -106,9 +173,39 @@ namespace JocsDeGuerra.Services
             }
         }
 
-        Task<InformeTornViewModel> IInformeTornViewModelService.GetInformeTorn()
+        public async Task<bool> SaveInformeTorn(InformeTornViewModel viewModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var informeTorns = await GetAll();
+
+                if (informeTorns != null)
+                { 
+                    var oldinformeTorn = informeTorns.Where(x => x.Id == viewModel.Id).FirstOrDefault();
+
+                    if (oldinformeTorn != null)
+                    {
+                        informeTorns.Remove(oldinformeTorn);
+                    }
+
+                    informeTorns.Add(viewModel);
+                    await AddInformeTorn(informeTorns);
+
+                    return true;
+                }
+
+
+                await AddInformeTorn(new List<InformeTornViewModel> { viewModel });
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
+
     }
 }

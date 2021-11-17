@@ -9,6 +9,7 @@
 @if (@CurrentTorn != null)
 {
     <h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber - @appDataService.SelectedTeam.Name</h3>
+    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="@SaveInforme">Desa Informe</MudButton>
     <div class="row">
         <div class="col">
             <MudCard Outlined="true">
@@ -154,25 +155,15 @@ else
     {
         alertClass = "invisible";
 
-        //TODO:
-         /*
-         * Obtenir del service l'informe de torn de l'equip actual per al torn actual. Sino, crearlo.
-         * La inicialització la farem al service directament.  
-        */
         var currentTurn = await turnService.GetCurrentTurn();
         CurrentTorn = await informeTornViewModelService.GetbyTeamAndTurn(appDataService.SelectedTeam, currentTurn);
-
-        //CurrentTorn = new InformeTornViewModel
-        //{
-        //    MapLocations = await locationService.GetLocations(),
-        //    CurrentTurn = await turnService.GetCurrentTurn(),
-        //    TurnActions = new TurnActionsViewModel(),
-        //    Assets = await assetsService.GetAssets(),
-        //    Team = await turnService.GetCurrentTurnTeam(appDataService.SelectedTeam.Id)
-        //};
-
     }
 
+
+    private async Task SaveInforme()
+    {
+        await informeTornViewModelService.SaveInformeTorn(CurrentTorn);
+    }
 
     private string ValidateProductionPoints(double value)
     {
@@ -228,9 +219,17 @@ else
         alertClass = "invisible";
     }
 
-    private void TancaTorn()
+    private async Task TancaTorn()
     {
-        Console.WriteLine("tanco torn");
+        var turnSaved = await turnService.SaveTurn();
+
+        if (turnSaved)
+        {
+            await informeTornViewModelService.Remove();
+        }
+
+
+        
     }
 
 }

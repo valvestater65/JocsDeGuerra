@@ -16,14 +16,15 @@ namespace JocsDeGuerra.Services
         private readonly ITeamService _teamService;
         private const string TURN_URI = "/turns";
         private readonly ISessionStorageService _sessionStorage;
+        private readonly IInformeTornViewModelService _informeTornViewModelService;
         private string _sessionKey;
-        public TurnService(IApiService apiService,ITeamService teamService, ISessionStorageService session)
+        public TurnService(IApiService apiService,ITeamService teamService, ISessionStorageService session, IInformeTornViewModelService informeTornViewModelService)
         {
             _apiService = apiService;
             _teamService = teamService;
             _sessionStorage = session;
             _sessionKey = "turns";
-
+            _informeTornViewModelService = informeTornViewModelService;
         }
 
         public async Task<List<Turn>> GetTurns()
@@ -183,6 +184,11 @@ namespace JocsDeGuerra.Services
                     });
                 }
 
+                if (current)
+                {
+                    turns.ForEach(t => t.Current = false);
+                }
+
                 turns.Add(turn);
 
                 _ = await AddTurns(turns);
@@ -218,40 +224,50 @@ namespace JocsDeGuerra.Services
             }
         }
 
-        public async Task<bool> SaveTurn(InformeTornViewModel viewModel)
+        public async Task<bool> SaveTurn()
         {
             try
             {
-                if (viewModel.CurrentTurn.Teams.Any(x => !x.ReadyToClose))
+
+                var informeTorns = await _informeTornViewModelService.GetAll();
+
+                if (informeTorns == null)
+                {
+                    return false;
+                }
+
+                Console.WriteLine($"Valor --> {informeTorns.Any(it => !it.Team.ReadyToClose)}");
+                var readyness = informeTorns.Select(it => it.Team.ReadyToClose);
+                foreach (var turn in readyness)
+                {
+                    Console.WriteLine($"Ready --> {turn}");
+                }
+
+                if (readyness.Any(x => !x))
                 {
                     //Els dos equips no estan ready, no podem tancar torn. 
                     return false;
                 }
 
-                var currentTurn = await GetCurrentTurn();
-
-                var index = currentTurn.Teams.FindIndex(x => x.Id == viewModel.Team.Id);
-                currentTurn.Teams.Remove(currentTurn.Teams.ElementAt(index));
-                currentTurn.Teams.Add(viewModel.Team);  
                 
+                var currentTurn = await GetCurrentTurn();
+                var newTurn = await CreateTurn(true);
 
-                 
+                newTurn.Teams.ForEach(t => {
+                    var informeTeam = informeTorns.Where(it => it.Team.Id == t.Id).FirstOrDefault();
+
+                    //Available points calc.
+                    t.AvailablePoints = CalculateAvailablePoints(currentTurn, informeTeam);
+
+                    //Setting owned locations new to false
+                    informeTeam.Team.OwnedLocations.ForEach(ol => ol.New = false);
+                    t.OwnedLocations = informeTeam.Team.OwnedLocations;
+                    t.AvailableAssets = informeTeam.Team.AvailableAssets;
+
+                });
 
 
-
-
-
-                return false;
-
-                //TODO:
-                /*
-                 * 2. viewModel teams --> turn teams
-                 * 3. Recalcular available points (nomes amb !New locations)
-                 * 4. Current torn tancat (boolean true)
-                 * 5. Crear nou torn (nou current torn)
-                 * 6. OwnedLocation nou torn --> New = false
-                 * 7. Update llista de turns. 
-                 */
+                return await UpdateTurnList(newTurn);
             }
             catch (Exception)
             {
@@ -259,9 +275,55 @@ namespace JocsDeGuerra.Services
             }
         }
 
-        private AccumulatedPoints CalculateAvailablePoints(Turn currentTurn, InformeTornViewModel viewModel)
+        private AccumulatedPoints CalculateAvailablePoints(Turn currentTurn, InformeTornViewModel informeTeam)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var currentTeamPoints = currentTurn.Teams.Where(te => te.Id == informeTeam.Team.Id).Select(x => x.AvailablePoints).FirstOrDefault();
+
+                var ownedLocations = informeTeam.Team.OwnedLocations.Where(x => !x.New).ToList();
+
+                var accumulated = new AccumulatedPoints
+                { 
+                    ExplorationPoints = (currentTeamPoints.ExplorationPoints - informeTeam.TurnActions.ExplorationPoints) + ownedLocations.Sum(x => x.Location.ExplorationPoints),
+                    ProductionPoints = (currentTeamPoints.ProductionPoints - informeTeam.TurnActions.ProductionPoints) + ownedLocations.Sum(x => x.Location.ProductionPoints) + informeTeam.TurnActions.IndustryPoints,
+                    ResearchPoints = (currentTeamPoints.ResearchPoints - informeTeam.TurnActions.ResearchPoints) + ownedLocations.Sum(x => x.Location.ResearchPoints)
+                };
+
+                return accumulated;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private async Task<bool> UpdateTurnList(Turn newTurn)
+        {
+            try
+            {
+                var oldTurns = await GetTurns();
+
+                if (oldTurns == null)
+                {
+                    return await AddTurns(new List<Turn> { newTurn });
+                }
+
+                oldTurns.Remove(oldTurns.Find(x => x.Id == newTurn.Id));
+                oldTurns.ForEach(t => t.Current = false);
+                oldTurns.Add(newTurn);
+
+
+                return await AddTurns(oldTurns);
+
+
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
 
