@@ -123,8 +123,8 @@ namespace JocsDeGuerra.Services
                     Id = Guid.NewGuid(),
                     Name = "Ares",
                     Abbrv = "AR",
-                    BaseProductionCost = 12,
-                    BaseResearchCost =16,
+                    BaseProductionCost = 0,
+                    BaseResearchCost =0,
                     Enabled = false
                 },
                 new Asset{
