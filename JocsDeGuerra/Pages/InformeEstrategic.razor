@@ -1,0 +1,61 @@
+﻿@page "/informeestrategic"
+@inject ITurnService TurnService
+@inject IAppDataService AppDataService
+@inject ISnackbar Snackbar
+
+@if (@CurrentTurn != null)
+{
+    <MudGrid>
+        <MudItem xd="12">
+            <h1>Informe Estratègic</h1>
+            <h5>Torn: @CurrentTurn.TurnNumber - Equip: @AppDataService.SelectedTeam.Name</h5>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper>
+                <table class="table">
+                    <thead>Punts</thead>
+                    <tr>
+                        <td>Producció: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints</td>
+                        <td>Recerca: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints</td>
+                        <td>Exploració: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints</td>
+                        <td>Punts industrial: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryPoints</td>
+                    </tr>
+                </table>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <MudText>Carregant ...  </MudText>
+}
+
+@code {
+
+    private Turn CurrentTurn { get; set; }
+    private Turn PreviousTurn { get; set; }
+    private Team CurrentTeam { get; set; }
+
+
+    private void ShowSnackBar()
+    {
+        Snackbar.Add("Cal seleccionar un equip",Severity.Error,config =>
+        {
+            config.Icon = Icons.Material.Rounded.Warning;
+        });
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AppDataService.SelectedTeam != null)
+        {
+            CurrentTurn = await TurnService.GetCurrentTurn();
+            PreviousTurn = await TurnService.GetPreviousTurn(CurrentTurn);
+            CurrentTeam = CurrentTurn.Teams.Where(x => x.Id == AppDataService.SelectedTeam.Id).FirstOrDefault();
+        }
+        else
+        {
+            ShowSnackBar();
+        }
+    }
+}

@@ -117,11 +117,32 @@ namespace JocsDeGuerra.Services
             {
                 //TODO: May need to save in session here? 
                 var result = await _apiService.Put(TURN_URI, turns);
+
+                if (result == 0)
+                { 
+                    await _sessionStorage.RemoveItemAsync(_sessionKey);
+                }
+
                 return result == 0;
             }
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public async Task<Turn> GetPreviousTurn(Turn turn)
+        {
+            try
+            {
+                var turns = await GetTurns();
+                
+                return turns.Where(x => x.TurnNumber == turn.TurnNumber - 1).FirstOrDefault();
+            }
+            catch (Exception)
+            {
+
+                return null;
             }
         }
 
@@ -228,7 +249,6 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-
                 var informeTorns = await _informeTornViewModelService.GetAll();
 
                 if (informeTorns == null)
@@ -236,12 +256,8 @@ namespace JocsDeGuerra.Services
                     return false;
                 }
 
-                Console.WriteLine($"Valor --> {informeTorns.Any(it => !it.Team.ReadyToClose)}");
                 var readyness = informeTorns.Select(it => it.Team.ReadyToClose);
-                foreach (var turn in readyness)
-                {
-                    Console.WriteLine($"Ready --> {turn}");
-                }
+                
 
                 if (readyness.Any(x => !x))
                 {
@@ -265,8 +281,12 @@ namespace JocsDeGuerra.Services
                     t.AvailableAssets = informeTeam.Team.AvailableAssets;
 
                 });
+                currentTurn.TurnActions = informeTorns.Select(x => x.TurnActions).ToList();
 
+                //Torn previ
+                await UpdateTurnList(currentTurn);
 
+                //Nou torn.
                 return await UpdateTurnList(newTurn);
             }
             catch (Exception)

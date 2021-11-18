@@ -23,6 +23,7 @@ namespace JocsDeGuerra.Models.ViewModels
 
     public class TurnActionsViewModel
     {
+        public Guid TeamId { get; set; }
         public string ProductionText { get; set; }
         public string ExplorationText { get; set; }
         public string ResearchText { get; set; }

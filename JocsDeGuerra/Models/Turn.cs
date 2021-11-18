@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JocsDeGuerra.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace JocsDeGuerra.Models
@@ -11,5 +12,12 @@ namespace JocsDeGuerra.Models
         public List<Team> Teams { get; set; }
         public Battle Battle { get; set; }
         public bool Current { get; set; }
+        public List<TurnActionsViewModel> TurnActions { get; set; }
+
+        public Turn()
+        {
+            TurnActions = new List<TurnActionsViewModel>();
+            Teams = new List<Team>();
+        }
     }
 }

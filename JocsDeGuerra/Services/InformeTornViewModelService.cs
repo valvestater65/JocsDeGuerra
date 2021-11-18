@@ -102,7 +102,7 @@ namespace JocsDeGuerra.Services
             {
                 CurrentTurn = turn,
                 Team = teamTurn,
-                TurnActions = new TurnActionsViewModel(),
+                TurnActions = new TurnActionsViewModel { TeamId = teamTurn.Id},
                 Assets = await _assetService.GetAssets(),
                 MapLocations = await _mapLocationService.GetLocations(),
                 Id = Guid.NewGuid()

@@ -15,5 +15,6 @@ namespace JocsDeGuerra.Interfaces.Services
         Task<Turn> GetCurrentTurn();
         Task<Team> GetCurrentTurnTeam(Guid teamId);
         Task<bool> SaveTurn();
+        Task<Turn> GetPreviousTurn(Turn turn);
     }
 }
