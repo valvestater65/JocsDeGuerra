@@ -7,20 +7,114 @@
 {
     <MudGrid>
         <MudItem xd="12">
-            <h1>Informe Estratègic</h1>
-            <h5>Torn: @CurrentTurn.TurnNumber - Equip: @AppDataService.SelectedTeam.Name</h5>
+            <h1><MudIcon Size="Size.Large" Color="Color.Success" Icon="@Icons.Filled.AssignmentTurnedIn"/> Informe Estratègic</h1>
+            <h5>Torn: @PreviousTurn.TurnNumber - @AppDataService.SelectedTeam.Name</h5>
         </MudItem>
         <MudItem xs="12">
-            <MudPaper>
+            <MudPaper Outlined="true" Class="pa-1">
+                <MudText Typo="Typo.h6">Accions fetes:</MudText>
                 <table class="table">
-                    <thead>Punts</thead>
                     <tr>
-                        <td>Producció: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints</td>
-                        <td>Recerca: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints</td>
-                        <td>Exploració: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints</td>
-                        <td>Punts industrial: @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryPoints</td>
+                        <td><MudText><b>Producció:</b>  @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints</MudText></td>
+                        <td><MudText><b>Recerca:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints</MudText></td>
+                        <td><MudText><b>Exploració:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints</MudText></td>
+                        <td><MudText><b>Punts industrial:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryPoints</MudText></td>
+                    </tr>
+                    <tr>
+                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionText</td>
+                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchText</td>
+                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationText</td>
+                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryText</td>
                     </tr>
                 </table>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Outlined="true" Class="pa-1">
+                <MudText Typo="Typo.h6">Punts disponibles torn: @CurrentTurn.TurnNumber</MudText>
+                <table class="table">
+                    <tr>
+                        <td><MudText><b>Producció:</b>  @CurrentTeam.AvailablePoints.ProductionPoints</MudText></td>
+                        <td><MudText><b>Recerca:</b> @CurrentTeam.AvailablePoints.ResearchPoints</MudText></td>
+                        <td><MudText><b>Exploració:</b> @CurrentTeam.AvailablePoints.ExplorationPoints </MudText></td>
+                    </tr>
+                </table>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6">
+            <MudPaper Outlined="true" Class="pa-1">
+                <MudText Typo="Typo.h6">Assets disponibles per torn @CurrentTurn.TurnNumber</MudText>
+                <MudTable Dense=true Items="ProducedAssets" Striped="true" Bordered="true">
+                    <HeaderContent>
+                        <MudTh>Nom</MudTh>
+                        <MudTh>Abbr.</MudTh>
+                        <MudTh>Disponibles</MudTh>
+                        <MudTh>Assignats</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Nom">@context.Asset.Name</MudTd>
+                        <MudTd DataLabel="Abbr.">@context.Asset.Abbrv</MudTd>
+                        <MudTd DataLabel="Disponibles">@context.Available</MudTd>
+                        <MudTd DataLabel="Assignats">@context.Reserved</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="6">
+            <MudPaper Outlined="true" Class="pa-1">
+                <MudText Typo="Typo.h6">Assets disponibles per batalla</MudText>
+                @if (EvenPreviousTurn != null)
+                {
+                    <MudTable Dense=true Items="BattleReadyAssets" Striped="true" Bordered="true">
+                        <HeaderContent>
+                            <MudTh>Nom</MudTh>
+                            <MudTh>Abbr.</MudTh>
+                            <MudTh>Disponibles</MudTh>
+                            <MudTh>Assignats</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Nom">@context.Asset.Name</MudTd>
+                            <MudTd DataLabel="Abbr.">@context.Asset.Abbrv</MudTd>
+                            <MudTd DataLabel="Disponibles">@context.Available</MudTd>
+                            <MudTd DataLabel="Assignats">@context.Reserved</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+                else
+                {
+                   <MudCard>
+                       <MudCardHeader>
+                           <CardHeaderAvatar>
+                            <MudIcon Icon="@Icons.Rounded.BackHand" Size="Size.Large" Color="Color.Error"></MudIcon>
+                           </CardHeaderAvatar>
+                           <CardHeaderContent>
+                               No en tens 
+                               ( ╥﹏╥) ノシ
+                           </CardHeaderContent>
+                       </MudCardHeader>
+                   </MudCard>  
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Outlined="true" Class="pa-1">
+                <MudText Typo="Typo.h6">Ubicacions Conquerides</MudText>
+                <MudTable Items="CurrentTeam.OwnedLocations">
+                    <HeaderContent>
+                        <MudTh>Nom</MudTh>
+                        <MudTh>Producció</MudTh>
+                        <MudTh>Investigació</MudTh>
+                        <MudTh>Exploració</MudTh>
+                        <MudTh>Recursos Assignats</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
+                        <MudTd DataLabel="Producció">@context.Location.ProductionPoints</MudTd>
+                        <MudTd DataLabel="Investigació">@context.Location.ResearchPoints</MudTd>
+                        <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
+                        <MudTd DataLabel="Recursos Assignats">@context.AssignedResources</MudTd>
+                    </RowTemplate>
+                </MudTable>
             </MudPaper>
         </MudItem>
     </MudGrid>
@@ -35,14 +129,18 @@ else
     private Turn CurrentTurn { get; set; }
     private Turn PreviousTurn { get; set; }
     private Team CurrentTeam { get; set; }
+    private Turn EvenPreviousTurn { get; set; }
+
+    private List<TeamAsset> ProducedAssets { get => GetPreviousTurnAssets(); }
+    private List<TeamAsset> BattleReadyAssets { get => GetBattleReadyAssets(); }
 
 
     private void ShowSnackBar()
     {
         Snackbar.Add("Cal seleccionar un equip",Severity.Error,config =>
-        {
-            config.Icon = Icons.Material.Rounded.Warning;
-        });
+                      {
+                          config.Icon = Icons.Material.Rounded.Warning;
+                      });
     }
 
     protected override async Task OnInitializedAsync()
@@ -51,11 +149,24 @@ else
         {
             CurrentTurn = await TurnService.GetCurrentTurn();
             PreviousTurn = await TurnService.GetPreviousTurn(CurrentTurn);
+            //Yes we need to get 2 turns back
+            EvenPreviousTurn = await TurnService.GetPreviousTurn(PreviousTurn);
             CurrentTeam = CurrentTurn.Teams.Where(x => x.Id == AppDataService.SelectedTeam.Id).FirstOrDefault();
         }
         else
         {
             ShowSnackBar();
         }
+    }
+
+    private List<TeamAsset> GetPreviousTurnAssets()
+    {
+        return PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+    }
+
+    private List<TeamAsset> GetBattleReadyAssets()
+    {
+        
+        return EvenPreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
     }
 }
