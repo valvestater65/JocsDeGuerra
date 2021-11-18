@@ -5,11 +5,20 @@
 @inject ITurnService turnService
 @inject IAppDataService appDataService
 @inject IInformeTornViewModelService informeTornViewModelService
+@inject ISnackbar Snackbar
 
 @if (@CurrentTorn != null)
 {
     <h3>Informe de Torn @CurrentTorn.CurrentTurn.TurnNumber - @appDataService.SelectedTeam.Name</h3>
-    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="@SaveInforme">Desa Informe</MudButton>
+    
+    <div class="row">
+        <div class="col">
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="@SaveInforme">Desa Informe</MudButton>
+        </div>
+        <div class="col">
+            <MudCheckBox @bind-Checked="@CurrentTorn.Team.ReadyToClose" Label="Llest per tancar torn" Color="Color.Secondary"></MudCheckBox>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <MudCard Outlined="true">
@@ -20,7 +29,7 @@
                 </MudCardHeader>
                 <MudCardContent>
                     <MudGrid>
-                        <MudItem xl="3">
+                        <MudItem xl="4">
                             <MudCard Class="mud-theme-primary">
                                 <MudCardHeader>
                                     <MudText Typo="Typo.h4">Producció</MudText>
@@ -30,7 +39,7 @@
                                 </MudCardHeader>
                             </MudCard>
                         </MudItem>
-                        <MudItem xl="3">
+                        <MudItem xl="4">
                             <MudCard Style="@($"color:{Theme.Palette.Dark}; background:{Theme.Palette.Warning};")">
                                 <MudCardHeader>
                                     <MudText Typo="Typo.h4">Recerca</MudText>
@@ -40,23 +49,13 @@
                                 </MudCardHeader>
                             </MudCard>
                         </MudItem>
-                        <MudItem xl="3">
+                        <MudItem xl="4">
                             <MudCard Style="@($"color:{Theme.Palette.White}; background:{Theme.Palette.Black};")">
                                 <MudCardHeader>
                                     <MudText Typo="Typo.h4">Exploració</MudText>
                                 </MudCardHeader>
                                 <MudCardHeader>
                                     <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.ExplorationPoints</MudText>
-                                </MudCardHeader>
-                            </MudCard>
-                        </MudItem>
-                        <MudItem xl="3">
-                            <MudCard Style="@($"color:{Theme.Palette.PrimaryLighten}; background:{Theme.Palette.DarkLighten};")">
-                                <MudCardHeader>
-                                    <MudText Typo="Typo.h4">Industria</MudText>
-                                </MudCardHeader>
-                                <MudCardHeader>
-                                    <MudText Typo="Typo.h3">@CurrentTorn.Team.AvailablePoints.IndustryPoints</MudText>
                                 </MudCardHeader>
                             </MudCard>
                         </MudItem>
@@ -120,20 +119,13 @@
     </div>
     <div class="row my-2">
         <div class="col">
-            <MudAlert Severity="Severity.Success" ContentAlignment="HorizontalAlignment.Start" Variant="Variant.Filled">
-                Equip llest per tancar torn? <MudCheckBox @bind-Checked="@CurrentTorn.Team.ReadyToClose" Color="Color.Secondary"></MudCheckBox>
-            </MudAlert>
-        </div>
-    </div>
-    <div class="row my-2">
-        <div class="col">
             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=MostraAlerta>Finalitza torn</MudButton>
             <div id="alertaTorn" class="@alertClass">
                 <MudAlert Severity="Severity.Error" Variant="Variant.Filled">
                     Tancar torn no és reversible. N'estas segur?
-                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" @onclick=TancaTorn>Si</MudButton>
-                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=AmagaAlerta>No</MudButton>
                 </MudAlert>
+                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" @onclick=TancaTorn>Si</MudButton>
+                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Secondary" @onclick=AmagaAlerta>No</MudButton>
             </div>
         </div>
     </div>
@@ -155,14 +147,43 @@ else
     {
         alertClass = "invisible";
 
-        var currentTurn = await turnService.GetCurrentTurn();
-        CurrentTorn = await informeTornViewModelService.GetbyTeamAndTurn(appDataService.SelectedTeam, currentTurn);
+        if (appDataService.SelectedTeam == null)
+        {
+            Snackbar.Add("Cal seleccionar un equip",Severity.Error,config =>
+              {
+                  config.Icon = Icons.Material.Rounded.Warning;
+              });
+
+        }
+        else
+        {
+            var currentTurn = await turnService.GetCurrentTurn();
+            CurrentTorn = await informeTornViewModelService.GetbyTeamAndTurn(appDataService.SelectedTeam, currentTurn);
+        }
     }
 
 
     private async Task SaveInforme()
     {
-        await informeTornViewModelService.SaveInformeTorn(CurrentTorn);
+        var result = await informeTornViewModelService.SaveInformeTorn(CurrentTorn);
+        if (!result)
+        {
+            Snackbar.Add("No s'han pogut desar els canvis", Severity.Error, config =>
+            {
+                config.Icon = Icons.Material.Rounded.Warning;
+
+            });
+        }
+        else
+        {
+            Snackbar.Add("Canvis desats", Severity.Success, config =>
+            {
+                config.Icon = Icons.Material.Rounded.Save;
+
+            });
+        }
+
+
     }
 
     private string ValidateProductionPoints(double value)
@@ -226,6 +247,20 @@ else
         if (turnSaved)
         {
             await informeTornViewModelService.Remove();
+
+            Snackbar.Add("Torn tancat!", Severity.Error, config =>
+            {
+                config.Icon = Icons.Material.Rounded.ThumbUp;
+            });
+
+        }
+        else
+        {
+            Snackbar.Add("No s'ha pogut tancar el torn. Revisa que l'altre equip estigui a punt.", Severity.Error, config =>
+            {
+                config.Icon = Icons.Material.Rounded.Warning;
+
+            });
         }
 
 

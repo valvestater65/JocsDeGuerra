@@ -16,8 +16,10 @@
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
     </MudDrawer>
-    <MudMainContent Class="content px-4">
-        @Body
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="py-3">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
 

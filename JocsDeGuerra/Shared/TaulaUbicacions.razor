@@ -59,7 +59,7 @@
         <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
         <MudTd DataLabel="Recursos Assignats">@context.AssignedResources</MudTd>
         <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Delete(@context.Location.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.Location.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" Class="ma-2" />
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>

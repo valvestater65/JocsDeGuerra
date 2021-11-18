@@ -2,19 +2,26 @@
 @inject ITeamService teamService
 @inject IAppDataService dataService; 
 
-
-<h1>Jocs de Guerra</h1>
-
-<MudAlert Severity="Severity.Error" Variant="Variant.Filled">Cal seleccionar un equip avans de començar</MudAlert>
-@if (SelectableTeams != null)
-{
-    <MudSelect @bind-Value="SelectedTeam">
-        @foreach (var team in SelectableTeams)
+<MudGrid>
+    <MudItem xs="12">
+        <MudGrid Justify="Justify.Center">
+                <img src="media/logoJDG.png"/>
+        </MudGrid>
+    </MudItem>
+    <MudItem xs="12">
+        <MudAlert Severity="Severity.Error" Variant="Variant.Filled">Cal seleccionar un equip avans de començar</MudAlert>
+        @if (SelectableTeams != null)
         {
-        <MudSelectItem Value="@team">@team.Name</MudSelectItem>
+            <MudSelect @bind-Value="SelectedTeam" Variant="Variant.Outlined" Label="Selecciona Equip">
+                @foreach (var team in SelectableTeams)
+                {
+                <MudSelectItem Value="@team">@team.Name</MudSelectItem>
+                }
+            </MudSelect>
         }
-    </MudSelect>
-}
+    </MudItem>
+</MudGrid>
+
 
 
 @code{

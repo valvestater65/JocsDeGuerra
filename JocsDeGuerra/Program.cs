@@ -5,6 +5,7 @@ using JocsDeGuerra.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using MudBlazor.Services;
 using System;
 using System.Net.Http;
@@ -20,7 +21,15 @@ namespace JocsDeGuerra
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddMudServices();
+            builder.Services.AddMudServices(config => {
+                config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopStart;
+                config.SnackbarConfiguration.ShowTransitionDuration = 500;
+                config.SnackbarConfiguration.HideTransitionDuration = 500;
+                config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+                config.SnackbarConfiguration.VisibleStateDuration = 5000;
+                config.SnackbarConfiguration.ShowCloseIcon = true;
+            });
+
             builder.Services.AddScoped<IMapLocationService, MapLocationService>();
             builder.Services.AddScoped<IAssetService, AssetService>();
             builder.Services.AddScoped<ITeamService, TeamService>();
