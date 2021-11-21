@@ -8,7 +8,7 @@
         @if (TurnList != null)
         {
             <MudForm>
-                <MudSelect @bind-Value="SelectedTurn" Label="Selecciona un torn">
+                <MudSelect @bind-Value="SelectedTurn" Label="Selecciona un torn" Dense="true">
                     @foreach (var turn in TurnList)
                     {
                     <MudSelectItem Value="@turn">@($"Torn {@turn.TurnNumber}")</MudSelectItem>

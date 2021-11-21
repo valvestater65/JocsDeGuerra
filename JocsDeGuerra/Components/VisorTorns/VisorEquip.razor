@@ -1,28 +1,103 @@
 ﻿@if (CurrentTeamActions != null)
 {
-    <MudGrid>
-        <MudItem xs="12">
-            <h6>@Team.Name</h6>
-        </MudItem>
-        <MudItem xs="12">
-            <MudSimpleTable Dense="true" Striped="true">
-                <thead>
-                    <tr>
-                        <th>Producció</th>
-                        <th>Recerca</th>
-                        <th>Exploració</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@CurrentTeamActions.ProductionPoints</td>
-                        <td>@CurrentTeamActions.ResearchPoints</td>
-                        <td>@CurrentTeamActions.ExplorationPoints</td>
-                    </tr>
-                </tbody>
-            </MudSimpleTable>
-        </MudItem>
-    </MudGrid>
+    <MudPaper Elevation="3" Class="pa-3">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText Typo="Typo.h2">@Team.Name</MudText>
+            </MudItem>
+            <MudItem xs="12">
+                <MudChip Icon="@Icons.Filled.AddBox" Color="Color.Primary" Label="true">Punts disponibles a inici de torn:</MudChip>
+                <MudSimpleTable Dense="true" Striped="true">
+                    <thead>
+                        <tr>
+                            <th>Producció</th>
+                            <th>Recerca</th>
+                            <th>Exploració</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Team.AvailablePoints.ProductionPoints</td>
+                            <td>@Team.AvailablePoints.ResearchPoints</td>
+                            <td>@Team.AvailablePoints.ExplorationPoints</td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudItem>
+            <MudItem xs="12">
+                <MudDivider/>
+            </MudItem>
+            <MudItem xs="12">
+                <MudChip Icon="@Icons.Filled.Build" Color="Color.Secondary" Label="true">Punts consumits:</MudChip>
+                <MudSimpleTable Dense="true" Striped="true">
+                    <thead>
+                        <tr>
+                            <th>Producció</th>
+                            <th>Recerca</th>
+                            <th>Exploració</th>
+                            <th>Industria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@CurrentTeamActions.ProductionPoints</td>
+                            <td>@CurrentTeamActions.ResearchPoints</td>
+                            <td>@CurrentTeamActions.ExplorationPoints</td>
+                            <td>@CurrentTeamActions.IndustryPoints</td>
+                        </tr>
+                        <tr>
+                            <td>@CurrentTeamActions.ProductionText</td>
+                            <td>@CurrentTeamActions.ResearchText</td>
+                            <td>@CurrentTeamActions.ExplorationText</td>
+                            <td>@CurrentTeamActions.IndustryText</td>
+                        </tr>
+                    </tbody>
+                </MudSimpleTable>
+            </MudItem>
+            <MudItem xs="12">
+                <MudDivider/>
+            </MudItem>
+            <MudItem xs="12">
+                <MudChip Icon="@Icons.Filled.LocationOn" Color="Color.Dark" Label="true">Ubicacions en posessió:</MudChip>
+                <MudTable Dense="true" Striped="true" Items="Team.OwnedLocations">
+                        <HeaderContent>
+                            <MudTh>Nom</MudTh>
+                            <MudTh>Producció</MudTh>
+                            <MudTh>Investigació</MudTh>
+                            <MudTh>Exploració</MudTh>
+                            <MudTh>Recursos Assignats</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
+                            <MudTd DataLabel="Producció">@context.Location.ProductionPoints</MudTd>
+                            <MudTd DataLabel="Investigació">@context.Location.ResearchPoints</MudTd>
+                            <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
+                            <MudTd DataLabel="Recursos Assignats">@context.AssignedResources</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+            </MudItem>
+            <MudItem xs="12">
+                <MudDivider/>
+            </MudItem>
+            <MudItem xs="12">
+                <MudChip Icon="@Icons.Filled.AirplanemodeActive" Color="Color.Info" Label="true">Assets Disponibles:</MudChip>
+                <MudTable Dense=true Items="Team.AvailableAssets" Striped="true" Bordered="true">
+                        <HeaderContent>
+                            <MudTh>Nom</MudTh>
+                            <MudTh>Abbr.</MudTh>
+                            <MudTh>Disponibles</MudTh>
+                            <MudTh>Assignats</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Nom">@context.Asset.Name</MudTd>
+                            <MudTd DataLabel="Abbr.">@context.Asset.Abbrv</MudTd>
+                            <MudTd DataLabel="Disponibles">@context.Available</MudTd>
+                            <MudTd DataLabel="Assignats">@context.Reserved</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
 }
 
 @code {
@@ -35,6 +110,10 @@
 
 
     protected override void OnInitialized()
+    {
+    }
+
+    protected override void OnParametersSet()
     {
         CurrentTeamActions = Actions.Where(x => x.TeamId == Team.Id).FirstOrDefault();
     }

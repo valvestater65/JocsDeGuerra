@@ -1,5 +1,9 @@
 ﻿@if (CurrentTurn != null)
 {
+    @if (CurrentTurn.Current)
+    {
+        <h6>Aquest és el torn actual.</h6>
+    }
     <MudGrid>
         <MudItem xs="6"><VisorEquip Team=@CurrentTurn.Teams[0] Actions=@CurrentTurn.TurnActions /></MudItem>
         <MudItem xs="6"><VisorEquip Team=@CurrentTurn.Teams[1] Actions=@CurrentTurn.TurnActions/></MudItem>
