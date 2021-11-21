@@ -1,0 +1,41 @@
+﻿@if (CurrentTeamActions != null)
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <h6>@Team.Name</h6>
+        </MudItem>
+        <MudItem xs="12">
+            <MudSimpleTable Dense="true" Striped="true">
+                <thead>
+                    <tr>
+                        <th>Producció</th>
+                        <th>Recerca</th>
+                        <th>Exploració</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@CurrentTeamActions.ProductionPoints</td>
+                        <td>@CurrentTeamActions.ResearchPoints</td>
+                        <td>@CurrentTeamActions.ExplorationPoints</td>
+                    </tr>
+                </tbody>
+            </MudSimpleTable>
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    [Parameter]
+    public Team Team { get; set; }
+    [Parameter]
+    public List<TurnActionsViewModel> Actions { get; set; }
+
+    public TurnActionsViewModel CurrentTeamActions { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        CurrentTeamActions = Actions.Where(x => x.TeamId == Team.Id).FirstOrDefault();
+    }
+}

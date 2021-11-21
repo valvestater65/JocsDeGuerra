@@ -1,0 +1,12 @@
+﻿@if (CurrentTurn != null)
+{
+    <MudGrid>
+        <MudItem xs="6"><VisorEquip Team=@CurrentTurn.Teams[0] Actions=@CurrentTurn.TurnActions /></MudItem>
+        <MudItem xs="6"><VisorEquip Team=@CurrentTurn.Teams[1] Actions=@CurrentTurn.TurnActions/></MudItem>
+    </MudGrid>
+}
+
+@code {
+    [Parameter]
+    public Turn CurrentTurn { get; set; }
+}

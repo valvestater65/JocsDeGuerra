@@ -1,0 +1,44 @@
+﻿@page "/resumtorns"
+@inject ITurnService TurnService
+<MudGrid>
+    <MudItem xs="12">
+        <h1>Resum Torns</h1>
+    </MudItem>
+    <MudItem xs="12">
+        @if (TurnList != null)
+        {
+            <MudForm>
+                <MudSelect @bind-Value="SelectedTurn" Label="Selecciona un torn">
+                    @foreach (var turn in TurnList)
+                    {
+                    <MudSelectItem Value="@turn">@($"Torn {@turn.TurnNumber}")</MudSelectItem>
+                    }
+            </MudSelect>
+            </MudForm>
+        }
+    </MudItem>
+    <MudItem xs="12">
+        @if (SelectedTurn != null)
+        {
+            <VisorTorns CurrentTurn="SelectedTurn"/>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    private Turn _selectedTurn = null;
+    private List<Turn> TurnList { get; set; } = null;
+    private Turn SelectedTurn { get => _selectedTurn; set
+        {
+            _selectedTurn = value;
+            //StateHasChanged();
+
+        } 
+    } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        TurnList = await TurnService.GetTurns();
+    }
+    
+}
