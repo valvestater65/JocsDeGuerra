@@ -12,12 +12,15 @@
         </MudItem>
         <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
-                <MudText Typo="Typo.h6">Accions fetes:</MudText>
+                <MudChip Icon="@Icons.Filled.Build" Color="Color.Secondary" Label="true">Accions realitzades:</MudChip>
                 <table class="table">
                     <tr>
-                        <td><MudText><b>Producció:</b>  @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints</MudText></td>
-                        <td><MudText><b>Recerca:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints</MudText></td>
-                        <td><MudText><b>Exploració:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints</MudText></td>
+                        <td><MudText><b>Producció:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints 
+                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ProductionPoints (disponibles)</MudText></td>
+                        <td><MudText><b>Recerca:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints 
+                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ResearchPoints (disponibles)</MudText></td>
+                        <td><MudText><b>Exploració:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints
+                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ExplorationPoints (disponibles) </MudText></td>
                         <td><MudText><b>Punts industrial:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryPoints</MudText></td>
                     </tr>
                     <tr>
@@ -31,19 +34,44 @@
         </MudItem>
         <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
-                <MudText Typo="Typo.h6">Punts disponibles torn: @CurrentTurn.TurnNumber</MudText>
-                <table class="table">
-                    <tr>
-                        <td><MudText><b>Producció:</b>  @CurrentTeam.AvailablePoints.ProductionPoints</MudText></td>
-                        <td><MudText><b>Recerca:</b> @CurrentTeam.AvailablePoints.ResearchPoints</MudText></td>
-                        <td><MudText><b>Exploració:</b> @CurrentTeam.AvailablePoints.ExplorationPoints </MudText></td>
-                    </tr>
-                </table>
+                <MudChip Icon="@Icons.Filled.AddShoppingCart" Color="Color.Primary" Label="true">Punts disponibles per al torn: @CurrentTurn.TurnNumber</MudChip>
+                <MudGrid Justify="Justify.Center" Spacing="3">
+                    <MudItem xs="3">
+                        <MudCard Class="mud-theme-primary">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h5">Producció</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h4" Align="Align.Center">@CurrentTeam.AvailablePoints.ProductionPoints</MudText>
+                                </MudCardContent>
+                            </MudCard>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudCard Style="@($"color:{Theme.Palette.Dark}; background:{Theme.Palette.Warning};")">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h5">Recerca</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h4" Align="Align.Center">@CurrentTeam.AvailablePoints.ResearchPoints</MudText>
+                                </MudCardContent>
+                            </MudCard>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudCard Style="@($"color:{Theme.Palette.White}; background:{Theme.Palette.Black};")">
+                                <MudCardHeader>
+                                    <MudText Typo="Typo.h5">Exploració</MudText>
+                                </MudCardHeader>
+                                <MudCardContent>
+                                    <MudText Typo="Typo.h4" Align="Align.Center">@CurrentTeam.AvailablePoints.ExplorationPoints</MudText>
+                                </MudCardContent>
+                            </MudCard>
+                    </MudItem>
+                </MudGrid>
             </MudPaper>
         </MudItem>
         <MudItem xs="6">
             <MudPaper Outlined="true" Class="pa-1">
-                <MudText Typo="Typo.h6">Assets disponibles per torn @CurrentTurn.TurnNumber</MudText>
+                <MudChip Icon="@Icons.Filled.AirplanemodeActive" Color="Color.Info" Label="true">Assets disponibles per al torn @CurrentTurn.TurnNumber</MudChip>
                 <MudTable Dense=true Items="ProducedAssets" Striped="true" Bordered="true">
                     <HeaderContent>
                         <MudTh>Nom</MudTh>
@@ -62,8 +90,8 @@
         </MudItem>
         <MudItem xs="6">
             <MudPaper Outlined="true" Class="pa-1">
-                <MudText Typo="Typo.h6">Assets disponibles per batalla</MudText>
-                @if (EvenPreviousTurn != null)
+                <MudChip Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Label="true">Assets disponibles per batalla</MudChip>
+                @if (PreviousTurn != null)
                 {
                     <MudTable Dense=true Items="BattleReadyAssets" Striped="true" Bordered="true">
                         <HeaderContent>
@@ -98,8 +126,8 @@
         </MudItem>
         <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
-                <MudText Typo="Typo.h6">Ubicacions Conquerides</MudText>
-                <MudTable Items="CurrentTeam.OwnedLocations">
+                <MudChip Icon="@Icons.Filled.LocationOn" Color="Color.Dark" Label="true">Ubicacions en posessió:</MudChip>
+                <MudTable Items="CurrentTeam.OwnedLocations" Dense="true" Striped="true">
                     <HeaderContent>
                         <MudTh>Nom</MudTh>
                         <MudTh>Producció</MudTh>
@@ -126,12 +154,12 @@ else
 
 @code {
 
+    private MudTheme Theme = new MudTheme();
     private Turn CurrentTurn { get; set; }
     private Turn PreviousTurn { get; set; }
     private Team CurrentTeam { get; set; }
-    private Turn EvenPreviousTurn { get; set; }
 
-    private List<TeamAsset> ProducedAssets { get => GetPreviousTurnAssets(); }
+    private List<TeamAsset> ProducedAssets { get => GetCurrentTurnAssets(); }
     private List<TeamAsset> BattleReadyAssets { get => GetBattleReadyAssets(); }
 
 
@@ -149,8 +177,6 @@ else
         {
             CurrentTurn = await TurnService.GetCurrentTurn();
             PreviousTurn = await TurnService.GetPreviousTurn(CurrentTurn);
-            //Yes we need to get 2 turns back
-            EvenPreviousTurn = await TurnService.GetPreviousTurn(PreviousTurn);
             CurrentTeam = CurrentTurn.Teams.Where(x => x.Id == AppDataService.SelectedTeam.Id).FirstOrDefault();
         }
         else
@@ -159,14 +185,14 @@ else
         }
     }
 
-    private List<TeamAsset> GetPreviousTurnAssets()
+    private List<TeamAsset> GetCurrentTurnAssets()
     {
-        return PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+        return CurrentTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
     }
 
     private List<TeamAsset> GetBattleReadyAssets()
     {
         
-        return EvenPreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+        return PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
     }
 }
