@@ -48,3 +48,17 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.redRow {
+    background-color: #f44336ff !important;
+}
+
+    .redRow > td {
+        color: rgb(255,167,36) !important;
+        font-weight: bold;
+    }
+
+        .redRow > td .mud-input {
+            color: rgb(255,167,36) !important;
+            font-weight: bold;
+        }
