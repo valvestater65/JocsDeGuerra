@@ -481,3 +481,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+JocsDeGuerra/.vscode/launch.json
+.gitignore
+JocsDeGuerra/.vscode/tasks.json
+jocsdeguerra.code-workspace
