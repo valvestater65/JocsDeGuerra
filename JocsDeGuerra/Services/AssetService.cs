@@ -72,7 +72,7 @@ namespace JocsDeGuerra.Services
 
             return new List<Asset> {
                 new Asset{
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), /*aurora, mustang, reliant kore, 100, razor, m50, pisces, mantis*/
                     Name = "Caces bàsics",
                     Abbrv = "CB",
                     BaseProductionCost = 2,
@@ -80,7 +80,7 @@ namespace JocsDeGuerra.Services
                     Enabled = true
                 },
                 new Asset{
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), /*Arrow, gladius, sabre, talon, 300, avenger, reliant tana, vanduul blade, nomad,kartu-al, hawk, merlin,buccaneer*/
                     Name = "Caces lleugers",
                     Abbrv = "CL",
                     BaseProductionCost = 3,
@@ -88,7 +88,7 @@ namespace JocsDeGuerra.Services
                     Enabled = true
                 },
                 new Asset{
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), /*Cutty, Super Hornet, Vanduul Scite/glaive, defender*/
                     Name = "Caces mitjans",
                     Abbrv = "CM",
                     BaseProductionCost = 4,
@@ -96,7 +96,7 @@ namespace JocsDeGuerra.Services
                     Enabled = true
                 },
                 new Asset{
-                    Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(), /*Vanguard Ares Freelancer MIS, prowler, Hurricane, mercury*/
                     Name = "Caces pesats",
                     Abbrv = "CP",
                     BaseProductionCost = 6,
@@ -108,23 +108,23 @@ namespace JocsDeGuerra.Services
                     Name = "Bombarder Lleuger (Gladiator/Harbringer)",
                     Abbrv = "BL",
                     BaseProductionCost = 7,
-                    BaseResearchCost =16,
+                    BaseResearchCost = 16,
+                    Enabled = false
+                },
+                new Asset {
+                    Id = Guid.NewGuid(),
+                    Name = "Suport Lleuger (Connie)",
+                    Abbrv = "CO",
+                    BaseProductionCost = 7,
+                    BaseResearchCost = 16,
                     Enabled = false
                 },
                 new Asset{
                     Id = Guid.NewGuid(),
                     Name = "Redeemer",
                     Abbrv = "RE",
-                    BaseProductionCost = 8,
-                    BaseResearchCost =16,
-                    Enabled = false
-                },
-                new Asset{
-                    Id = Guid.NewGuid(),
-                    Name = "Ares",
-                    Abbrv = "AR",
-                    BaseProductionCost = 0,
-                    BaseResearchCost =0,
+                    BaseProductionCost = 10,
+                    BaseResearchCost = 16,
                     Enabled = false
                 },
                 new Asset{
