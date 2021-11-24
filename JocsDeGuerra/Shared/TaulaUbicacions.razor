@@ -51,6 +51,9 @@
         <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.ResearchPoints)">Investigació</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<OwnedLocation,object>(x => x.Location.ExplorationPoints)">Exploració</MudTableSortLabel></MudTh>
         <MudTh>Recursos Assignats</MudTh>
+        <MudTh>Esborrar</MudTh>
+        <MudTh>Conflicte</MudTh>
+
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
@@ -60,6 +63,9 @@
         <MudTd DataLabel="Recursos Assignats">@context.AssignedResources</MudTd>
         <MudTd DataLabel="">
             <MudFab @onclick="@(()=>Delete(@context.Location.Id))" Color="Color.Secondary" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" IconSize="Size.Small" Class="ma-2" />
+        </MudTd>
+        <MudTd>
+            <MudCheckBox @bind-Checked="@context.Location.Conflict" Color="Color.Secondary"/>
         </MudTd>
     </RowTemplate>
     <RowEditingTemplate>

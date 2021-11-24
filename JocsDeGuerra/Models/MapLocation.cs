@@ -14,5 +14,6 @@ namespace JocsDeGuerra.Models
         public string BattleArchetipes { get; set; }
         public bool IsConquerable { get; set; }
         public bool IsNeutral { get; set; }
+        public bool Conflict { get; set; }
     }
 }

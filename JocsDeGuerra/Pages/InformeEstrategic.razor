@@ -127,7 +127,8 @@
         <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
                 <MudChip Icon="@Icons.Filled.LocationOn" Color="Color.Dark" Label="true">Ubicacions en posessió:</MudChip>
-                <MudTable Items="CurrentTeam.OwnedLocations" Dense="true" Striped="true">
+                <MudText Typo="Typo.caption"> <MudIcon Icon="@Icons.Material.Filled.Api" /> Ubicació en conflicte</MudText>
+                <MudTable Items="CurrentTeam.OwnedLocations" Dense="true" Striped="true" RowClassFunc="@SetRowColor">
                     <HeaderContent>
                         <MudTh>Nom</MudTh>
                         <MudTh>Producció</MudTh>
@@ -136,7 +137,12 @@
                         <MudTh>Recursos Assignats</MudTh>
                     </HeaderContent>
                     <RowTemplate>
-                        <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
+                        <MudTd DataLabel="Nom">
+                             @if (context.Location.Conflict)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Api" />
+                                }
+                              @context.Location.Name</MudTd>
                         <MudTd DataLabel="Producció">@context.Location.ProductionPoints</MudTd>
                         <MudTd DataLabel="Investigació">@context.Location.ResearchPoints</MudTd>
                         <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
@@ -192,7 +198,11 @@ else
 
     private List<TeamAsset> GetBattleReadyAssets()
     {
-        
         return PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+    }
+
+    private string SetRowColor(OwnedLocation location, int index)
+    {
+        return (location.Location.Conflict)? "redRow": "";
     }
 }

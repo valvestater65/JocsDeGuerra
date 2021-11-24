@@ -59,7 +59,7 @@
             </MudItem>
             <MudItem xs="12">
                 <MudChip Icon="@Icons.Filled.LocationOn" Color="Color.Dark" Label="true">Ubicacions en posessió:</MudChip>
-                <MudTable Dense="true" Striped="true" Items="Team.OwnedLocations">
+                <MudTable Dense="true" Striped="true" Items="Team.OwnedLocations" Hover="true" RowClassFunc="@SetRowColor">
                         <HeaderContent>
                             <MudTh>Nom</MudTh>
                             <MudTh>Producció</MudTh>
@@ -68,7 +68,13 @@
                             <MudTh>Recursos Assignats</MudTh>
                         </HeaderContent>
                         <RowTemplate>
-                            <MudTd DataLabel="Nom">@context.Location.Name</MudTd>
+                            <MudTd DataLabel="Nom">
+                                @if (context.Location.Conflict)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Api" />
+                                }
+                                @context.Location.Name
+                                </MudTd>
                             <MudTd DataLabel="Producció">@context.Location.ProductionPoints</MudTd>
                             <MudTd DataLabel="Investigació">@context.Location.ResearchPoints</MudTd>
                             <MudTd DataLabel="Exploració">@context.Location.ExplorationPoints</MudTd>
@@ -107,6 +113,12 @@
     public List<TurnActionsViewModel> Actions { get; set; }
 
     public TurnActionsViewModel CurrentTeamActions { get; set; }
+
+    private string SetRowColor(OwnedLocation location, int index)
+    {
+        return (location.Location.Conflict)? "redRow": "";
+    }
+
 
 
     protected override void OnInitialized()
