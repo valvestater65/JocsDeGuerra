@@ -1,0 +1,25 @@
+﻿<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5">Punts generats per torn</MudText>
+    </MudItem>
+    <MudItem xs ="4">
+        <MudText Typo="Typo.h6">Producció</MudText>
+        <ProductionChart TurnList="@TurnList"></ProductionChart>
+    </MudItem>
+    <MudItem xs="4">
+        <MudText Typo="Typo.h6">Investigació</MudText>
+        <ResearchChart TurnList="@TurnList"></ResearchChart>
+    </MudItem>
+    <MudItem xs="4">
+        <MudText Typo="Typo.h6">Exploració</MudText>
+        <ExplorationChart TurnList="@TurnList"></ExplorationChart>
+    </MudItem>
+</MudGrid>
+
+
+
+@code {
+    [Parameter]
+    public List<Turn> TurnList { get; set; }
+
+}

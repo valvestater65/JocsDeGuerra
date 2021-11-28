@@ -1,0 +1,38 @@
+﻿@if (Series != null && Series.Count > 0)
+{
+    <MudChart ChartType="ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxis" Width="100%"></MudChart>
+}
+
+@code {
+    [Parameter]
+    public List<Turn> TurnList { get; set; }
+    public List<ChartSeries> Series = new List<ChartSeries>();
+    public string[] XAxis;
+
+    protected override void OnInitialized()
+    {
+        GenerateAxisData();
+        GenerateSeriesData();
+    }
+
+    private void GenerateSeriesData()
+    {
+        var teams = TurnList.SelectMany(x => x.Teams).GroupBy(t => t.Id);
+        var turnActions = TurnList.Where(t => !t.Current).SelectMany(x => x.TurnActions).GroupBy(a => a.TeamId);
+
+
+        foreach (var actionList in turnActions)
+        {
+            Series.Add(new ChartSeries {
+                    Name = TurnList.SelectMany(x => x.Teams).Where(t => t.Id == actionList.Key).FirstOrDefault().Name,
+                    Data = actionList.Select(ac => ac.ResearchPoints).ToArray()
+            });
+
+        }
+    }
+
+    private void GenerateAxisData()
+    {
+        XAxis = TurnList.Select(x => x.TurnNumber.ToString()).ToArray();
+    }
+}

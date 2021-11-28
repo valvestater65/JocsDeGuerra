@@ -1,5 +1,6 @@
 ﻿@page "/"
-@inject ITeamService teamService
+@inject ITeamService teamService;
+@inject ITurnService TurnService;
 @inject IAppDataService dataService; 
 
 <MudGrid>
@@ -22,12 +23,19 @@
             </MudSelect>
         }
     </MudItem>
+    <MudItem xs="12">
+        @if (TurnList != null)
+        {
+            <TeamCharts TurnList="@TurnList" />
+        }
+    </MudItem>
 </MudGrid>
 
 
 
 @code{
     private List<Team> SelectableTeams { get; set; }
+    private List<Turn> TurnList { get; set; }
     private Team _boundedTeam;
     private Team SelectedTeam { get => _boundedTeam;
         set
@@ -46,6 +54,7 @@
     protected override async Task OnInitializedAsync()
     {
         await GetTeams();
+        TurnList = await TurnService.GetTurns();
     }
 
     private async Task GetTeams()
