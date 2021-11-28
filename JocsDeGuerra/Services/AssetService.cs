@@ -59,9 +59,8 @@ namespace JocsDeGuerra.Services
 
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 return null;
             }
         }

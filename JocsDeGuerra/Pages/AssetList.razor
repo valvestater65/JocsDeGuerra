@@ -1,0 +1,23 @@
+﻿@page "/assetList"
+@inject IAssetService AssetService
+
+<MudGrid>
+    <MudItem xs="12">
+        @if (Assets != null && Assets.Count > 0)
+        {
+            <MudTable Dense="true" Items="@Assets"></MudTable>
+        }
+    </MudItem>
+
+</MudGrid>
+
+@code {
+    private List<Asset> Assets { get; set; }
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        Assets = await AssetService.GetAssets();
+    }
+
+}
