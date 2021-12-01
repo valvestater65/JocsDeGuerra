@@ -87,15 +87,15 @@ namespace JocsDeGuerra.Services
 
                 var teams = new List<Team> {
                     new Team{
-                        Name = "Equip Vermell",
+                        Name = "Red Ribbons",
                         Id = Guid.NewGuid(),
-                        BaseExplorationPoints = 4 ,
+                        BaseExplorationPoints = 6 ,
                         BaseProductionPoints = 6,
                         BaseResearchPoints = 3,
                         OwnedLocations = new List<OwnedLocation> {
                             new OwnedLocation {
                                 Location = new MapLocation{
-                                        Name ="Base Vermell",
+                                        Name ="Base RR",
                                         Id = Guid.NewGuid(),
                                         ProductionPoints = 2,
                                         ResearchPoints = 3,
@@ -107,15 +107,15 @@ namespace JocsDeGuerra.Services
                         AvailableAssets = await GetTeamAssets()
                     },
                     new Team{
-                        Name = "Equip Blanc",
+                        Name = "White Walkers",
                         Id = Guid.NewGuid(),
-                        BaseExplorationPoints = 4,
+                        BaseExplorationPoints = 6,
                         BaseProductionPoints = 6,
                         BaseResearchPoints = 3,
                         OwnedLocations = new List<OwnedLocation> {
                             new OwnedLocation {
                                 Location = new MapLocation{
-                                        Name ="Base Blanc",
+                                        Name ="Base WW",
                                         Id = Guid.NewGuid(),
                                         ProductionPoints = 2,
                                         ResearchPoints = 3,
