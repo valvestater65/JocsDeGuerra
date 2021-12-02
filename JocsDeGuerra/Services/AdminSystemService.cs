@@ -53,20 +53,6 @@ namespace JocsDeGuerra.Services
             }
         }
 
-
-        //Initial team load. 
-        public async Task SetTeams()
-        {
-            try
-            {
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task SetMapLocations()
         {
             try
@@ -78,7 +64,6 @@ namespace JocsDeGuerra.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
