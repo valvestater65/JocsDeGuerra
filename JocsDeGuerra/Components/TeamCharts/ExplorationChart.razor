@@ -1,6 +1,6 @@
 ﻿@if (Series != null && Series.Count > 0)
 {
-    <MudChart ChartType="ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxis" Width="100%"></MudChart>
+    <MudChart ChartType="ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxis" Width="100%" LegendPosition="Position.Top"></MudChart>
 }
 
 @code {
@@ -8,6 +8,7 @@
     public List<Turn> TurnList { get; set; }
     public List<ChartSeries> Series = new List<ChartSeries>();
     public string[] XAxis;
+    public ChartOptions ChartOptions;
 
     protected override void OnInitialized()
     {
@@ -20,14 +21,12 @@
         var teams = TurnList.SelectMany(x => x.Teams).GroupBy(t => t.Id);
         var turnActions = TurnList.Where(t => !t.Current).SelectMany(x => x.TurnActions).GroupBy(a => a.TeamId);
 
-
         foreach (var actionList in turnActions)
         {
             Series.Add(new ChartSeries {
-                    Name = TurnList.SelectMany(x => x.Teams).Where(t => t.Id == actionList.Key).FirstOrDefault().Name,
+                    Name = TurnList.SelectMany(x => x.Teams).FirstOrDefault(t => t.Id == actionList.Key).Name,
                     Data = actionList.Select(ac => ac.ExplorationPoints).ToArray()
             });
-
         }
     }
 
