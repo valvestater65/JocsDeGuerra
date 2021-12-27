@@ -17,14 +17,13 @@
 
     private void GenerateSeriesData()
     {
-        var teams = TurnList.SelectMany(x => x.Teams).GroupBy(t => t.Id);
         var turnActions = TurnList.Where(t => !t.Current).SelectMany(x => x.TurnActions).GroupBy(a => a.TeamId);
 
 
         foreach (var actionList in turnActions)
         {
             Series.Add(new ChartSeries {
-                    Name = TurnList.SelectMany(x => x.Teams).Where(t => t.Id == actionList.Key).FirstOrDefault().Name,
+                    Name = TurnList.SelectMany(x => x.Teams).FirstOrDefault(t => t.Id == actionList.Key).Name,
                     Data = actionList.Select(ac => ac.ProductionPoints).ToArray()
             });
 
