@@ -64,10 +64,10 @@ namespace JocsDeGuerra.Services
 
         public async Task<Turn> GetCurrentTurn()
         {
-            Turn currentTurn = new();
             try
             {
                 var turns = await GetTurns();
+                Turn currentTurn;
 
                 if (turns == null || turns.Count == 0)
                 {
@@ -75,7 +75,7 @@ namespace JocsDeGuerra.Services
                 }
                 else 
                 {
-                    currentTurn = turns.Where(x => x.Current).FirstOrDefault();
+                    currentTurn = turns.FirstOrDefault(x => x.Current);
                 }
 
                 await _sessionStorage.SetItemAsync($"{_sessionKey}_{currentTurn.Id}",currentTurn);

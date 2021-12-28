@@ -15,19 +15,19 @@
                 <MudChip Icon="@Icons.Filled.Build" Color="Color.Secondary" Label="true">Accions realitzades:</MudChip>
                 <table class="table">
                     <tr>
-                        <td><MudText><b>Producció:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionPoints 
-                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ProductionPoints (disponibles)</MudText></td>
-                        <td><MudText><b>Recerca:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchPoints 
-                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ResearchPoints (disponibles)</MudText></td>
-                        <td><MudText><b>Exploració:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationPoints
-                            / @PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).First().AvailablePoints.ExplorationPoints (disponibles) </MudText></td>
-                        <td><MudText><b>Punts industrial:</b> @PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryPoints</MudText></td>
+                        <td><MudText><b>Producció:</b> @PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ProductionPoints 
+                            / @PreviousTurn.Teams.First(x => x.Id == CurrentTeam.Id).AvailablePoints.ProductionPoints (disponibles)</MudText></td>
+                        <td><MudText><b>Recerca:</b> @PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ResearchPoints 
+                            / @PreviousTurn.Teams.First(x => x.Id == CurrentTeam.Id).AvailablePoints.ResearchPoints (disponibles)</MudText></td>
+                        <td><MudText><b>Exploració:</b> @PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ExplorationPoints
+                            / @PreviousTurn.Teams.First(x => x.Id == CurrentTeam.Id).AvailablePoints.ExplorationPoints (disponibles) </MudText></td>
+                        <td><MudText><b>Punts industrial:</b> @PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).IndustryPoints</MudText></td>
                     </tr>
                     <tr>
-                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ProductionText</td>
-                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ResearchText</td>
-                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().ExplorationText</td>
-                        <td>@PreviousTurn.TurnActions.Where(x => x.TeamId == CurrentTeam.Id).First().IndustryText</td>
+                        <td>@PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ProductionText</td>
+                        <td>@PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ResearchText</td>
+                        <td>@PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).ExplorationText</td>
+                        <td>@PreviousTurn.TurnActions.First(x => x.TeamId == CurrentTeam.Id).IndustryText</td>
                     </tr>
                 </table>
             </MudPaper>
@@ -165,8 +165,8 @@ else
     private Turn PreviousTurn { get; set; }
     private Team CurrentTeam { get; set; }
 
-    private List<TeamAsset> ProducedAssets { get => GetCurrentTurnAssets(); }
-    private List<TeamAsset> BattleReadyAssets { get => GetBattleReadyAssets(); }
+    private List<TeamAsset> ProducedAssets => GetCurrentTurnAssets();
+    private List<TeamAsset> BattleReadyAssets => GetBattleReadyAssets();
 
 
     private void ShowSnackBar()
@@ -183,7 +183,7 @@ else
         {
             CurrentTurn = await TurnService.GetCurrentTurn();
             PreviousTurn = await TurnService.GetPreviousTurn(CurrentTurn);
-            CurrentTeam = CurrentTurn.Teams.Where(x => x.Id == AppDataService.SelectedTeam.Id).FirstOrDefault();
+            CurrentTeam = CurrentTurn.Teams.FirstOrDefault(x => x.Id == AppDataService.SelectedTeam.Id);
         }
         else
         {
@@ -193,12 +193,12 @@ else
 
     private List<TeamAsset> GetCurrentTurnAssets()
     {
-        return CurrentTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+        return CurrentTurn.Teams.FirstOrDefault(x => x.Id == CurrentTeam.Id)?.AvailableAssets;
     }
 
     private List<TeamAsset> GetBattleReadyAssets()
     {
-        return PreviousTurn.Teams.Where(x => x.Id == CurrentTeam.Id).FirstOrDefault()?.AvailableAssets;
+        return PreviousTurn.Teams.FirstOrDefault(x => x.Id == CurrentTeam.Id)?.AvailableAssets;
     }
 
     private string SetRowColor(OwnedLocation location, int index)
