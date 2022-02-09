@@ -112,14 +112,12 @@
     [Parameter]
     public List<TurnActionsViewModel> Actions { get; set; }
 
-    public TurnActionsViewModel CurrentTeamActions { get; set; }
+    private TurnActionsViewModel CurrentTeamActions { get; set; }
 
     private string SetRowColor(OwnedLocation location, int index)
     {
         return (location.Location.Conflict)? "redRow": "";
     }
-
-
 
     protected override void OnInitialized()
     {
@@ -127,6 +125,6 @@
 
     protected override void OnParametersSet()
     {
-        CurrentTeamActions = Actions.Where(x => x.TeamId == Team.Id).FirstOrDefault();
+        CurrentTeamActions = Actions.FirstOrDefault(x => x.TeamId == Team.Id);
     }
 }

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "JocsDeGuerra\\bin\\Release\\net5.0\\browser-wasm\\publish\\wwwroot",
+    "public": "JocsDeGuerra/bin/Release/net5.0/publish/wwwroot",
     "ignore": [
       "firebase.json",
       "**/.*",
