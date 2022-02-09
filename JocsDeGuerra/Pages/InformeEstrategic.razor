@@ -69,7 +69,7 @@
                 </MudGrid>
             </MudPaper>
         </MudItem>
-        <MudItem xs="6">
+        <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
                 <MudChip Icon="@Icons.Filled.AirplanemodeActive" Color="Color.Info" Label="true">Assets disponibles per al torn @CurrentTurn.TurnNumber</MudChip>
                 <MudTable Dense=true Items="ProducedAssets" Striped="true" Bordered="true">
@@ -88,7 +88,7 @@
                 </MudTable>
             </MudPaper>
         </MudItem>
-        <MudItem xs="6">
+        @*<MudItem xs="6">
             <MudPaper Outlined="true" Class="pa-1">
                 <MudChip Icon="@Icons.Custom.Uncategorized.Radioactive" Color="Color.Warning" Label="true">Assets disponibles per batalla</MudChip>
                 @if (PreviousTurn != null)
@@ -123,7 +123,7 @@
                    </MudCard>  
                 }
             </MudPaper>
-        </MudItem>
+        </MudItem>*@
         <MudItem xs="12">
             <MudPaper Outlined="true" Class="pa-1">
                 <MudChip Icon="@Icons.Filled.LocationOn" Color="Color.Dark" Label="true">Ubicacions en posessió:</MudChip>
