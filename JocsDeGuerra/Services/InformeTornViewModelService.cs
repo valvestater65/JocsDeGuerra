@@ -20,7 +20,7 @@ namespace JocsDeGuerra.Services
         private readonly string _sessionKey = "informeTorns";
 
         public InformeTornViewModelService(IApiService apiService, ISessionStorageService sessionStorage,
-            IAssetService assetService, IMapLocationService mapLocationService )
+            IAssetService assetService, IMapLocationService mapLocationService)
         {
             _apiService = apiService;
             _sessionService = sessionStorage;
@@ -35,15 +35,13 @@ namespace JocsDeGuerra.Services
                 var informesSession = await _sessionService.GetItemAsync<List<InformeTornViewModel>>(_sessionKey);
 
                 if (informesSession != null)
-                { 
+                {
                     await _sessionService.RemoveItemAsync(_sessionKey);
                 }
 
                 var result = await _apiService.Put(_dbKey, viewModel);
 
                 return result == 0;
-
-
             }
             catch (Exception)
             {
@@ -60,8 +58,7 @@ namespace JocsDeGuerra.Services
                 if (informeTorns == null || informeTorns.Count == 0)
                     return null;
 
-                return informeTorns.Where(x => x.Team.Id == team.Id).FirstOrDefault();
-
+                return informeTorns.FirstOrDefault(x => x.Team.Id == team.Id);
             }
             catch (Exception)
             {
@@ -73,7 +70,8 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-                var informeTorn = (await GetAll())?.Where(it => it.Team.Id == team.Id && it.CurrentTurn.Id == currentTurn.Id).FirstOrDefault();
+                var informeTorn = (await GetAll())
+                    ?.Where(it => it.Team.Id == team.Id && it.CurrentTurn.Id == currentTurn.Id).FirstOrDefault();
 
                 if (informeTorn == null)
                 {
@@ -82,31 +80,25 @@ namespace JocsDeGuerra.Services
                 }
 
                 return informeTorn;
-
-
             }
             catch (Exception)
             {
-
                 return null;
             }
         }
 
         private async Task<InformeTornViewModel> CreateInformeTorn(Team team, Turn turn)
         {
-
-
             var teamTurn = turn.Teams.Find(x => x.Id == team.Id);
 
             var newInforme = new InformeTornViewModel
             {
                 CurrentTurn = turn,
                 Team = teamTurn,
-                TurnActions = new TurnActionsViewModel { TeamId = teamTurn.Id},
+                TurnActions = new TurnActionsViewModel {TeamId = teamTurn.Id},
                 Assets = await _assetService.GetAssets(),
                 MapLocations = await _mapLocationService.GetLocations(),
                 Id = Guid.NewGuid()
-
             };
 
             var informeTorns = await GetAll();
@@ -135,7 +127,7 @@ namespace JocsDeGuerra.Services
 
                 if (!string.IsNullOrEmpty(informeTornStr) && informeTornStr != "null")
                 {
-                    var dbInformeTorn =  JsonSerializer.Deserialize<List<InformeTornViewModel>>(informeTornStr);
+                    var dbInformeTorn = JsonSerializer.Deserialize<List<InformeTornViewModel>>(informeTornStr);
                     await _sessionService.SetItemAsync(_sessionKey, dbInformeTorn);
                     return dbInformeTorn;
                 }
@@ -146,7 +138,6 @@ namespace JocsDeGuerra.Services
 
             catch (Exception)
             {
-
                 return null;
             }
         }
@@ -155,17 +146,17 @@ namespace JocsDeGuerra.Services
         {
             try
             {
-
                 if (await _apiService.Delete(_dbKey))
                 {
                     if (await _sessionService.ContainKeyAsync(_sessionKey))
-                    { 
+                    {
                         await _sessionService.RemoveItemAsync(_sessionKey);
                     }
+
                     return true;
                 }
-                return false;
 
+                return false;
             }
             catch (Exception)
             {
@@ -180,8 +171,8 @@ namespace JocsDeGuerra.Services
                 var informeTorns = await GetAll();
 
                 if (informeTorns != null)
-                { 
-                    var oldinformeTorn = informeTorns.Where(x => x.Id == viewModel.Id).FirstOrDefault();
+                {
+                    var oldinformeTorn = informeTorns.FirstOrDefault(x => x.Id == viewModel.Id);
 
                     if (oldinformeTorn != null)
                     {
@@ -195,17 +186,14 @@ namespace JocsDeGuerra.Services
                 }
 
 
-                await AddInformeTorn(new List<InformeTornViewModel> { viewModel });
+                await AddInformeTorn(new List<InformeTornViewModel> {viewModel});
 
                 return true;
-
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
-
     }
 }

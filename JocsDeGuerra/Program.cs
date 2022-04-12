@@ -20,7 +20,7 @@ namespace JocsDeGuerra
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddMudServices(config => {
                 config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopStart;
                 config.SnackbarConfiguration.ShowTransitionDuration = 500;
@@ -42,7 +42,8 @@ namespace JocsDeGuerra
             builder.Services.AddBlazoredSessionStorage();
 
             builder.Services.AddHttpClient(NamedClients.FIREBASE_CLIENT,
-                client => { 
+                client => {
+                    //This URL does not exist anymore :)
                     client.BaseAddress = new Uri("https://jocsdeguerra-e3130-default-rtdb.europe-west1.firebasedatabase.app/");
                 });
 

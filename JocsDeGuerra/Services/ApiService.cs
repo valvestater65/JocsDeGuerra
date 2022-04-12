@@ -85,12 +85,7 @@ namespace JocsDeGuerra.Services
             {
                 var response = await _client.DeleteAsync($"{url}.json?auth={KEY}");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    return false;
-                }
-
-                return true;
+                return response.IsSuccessStatusCode;
             }
             catch (Exception)
             {

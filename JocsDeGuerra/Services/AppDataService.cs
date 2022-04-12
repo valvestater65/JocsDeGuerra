@@ -19,9 +19,7 @@ namespace JocsDeGuerra.Services
 
         public Team SelectedTeam
         {
-            get {
-                return GetSelectedTeamFromSession();
-            } 
+            get => GetSelectedTeamFromSession();
             set
             {
                 _sessionService.SetItem(SharedSessionKeys.SelectedTeam, value);

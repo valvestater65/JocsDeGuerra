@@ -101,7 +101,7 @@ namespace JocsDeGuerra.Services
                     return null;
                 }
 
-                var turn = turns.Where(x => x.Id == id).FirstOrDefault();
+                var turn = turns.FirstOrDefault(x => x.Id == id);
                 return turn ?? null;
 
             }
@@ -137,7 +137,7 @@ namespace JocsDeGuerra.Services
             {
                 var turns = await GetTurns();
                 
-                return turns.Where(x => x.TurnNumber == turn.TurnNumber - 1).FirstOrDefault();
+                return turns.FirstOrDefault(x => x.TurnNumber == turn.TurnNumber - 1);
             }
             catch (Exception)
             {
@@ -233,7 +233,7 @@ namespace JocsDeGuerra.Services
                 
                 if (turnList != null)
                 { 
-                    return turnList.Teams.Where(x => x.Id == teamId).FirstOrDefault();
+                    return turnList.Teams.FirstOrDefault(x => x.Id == teamId);
                 }
 
                 return null;
@@ -270,7 +270,7 @@ namespace JocsDeGuerra.Services
                 var newTurn = await CreateTurn(true);
 
                 newTurn.Teams.ForEach(t => {
-                    var informeTeam = informeTorns.Where(it => it.Team.Id == t.Id).FirstOrDefault();
+                    var informeTeam = informeTorns.FirstOrDefault(it => it.Team.Id == t.Id);
 
                     //Available points calc.
                     t.AvailablePoints = CalculateAvailablePoints(currentTurn, informeTeam);
