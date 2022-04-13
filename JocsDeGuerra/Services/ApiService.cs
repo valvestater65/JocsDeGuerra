@@ -11,7 +11,7 @@ namespace JocsDeGuerra.Services
     public class ApiService : IApiService
     {
 
-        private const string KEY = "T8hyHa2kgzsIIJdLVvNW8kF6pGOgVqOE5ViJOIrP";
+        private const string KEY = "API_KEY";
         private readonly HttpClient _client;
 
         public ApiService(IHttpClientFactory factory)
